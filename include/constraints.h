@@ -56,14 +56,14 @@ struct ObjectiveData {
 /////
 extern int colm;
 extern int row;
-extern int count_dc = 0;
+extern int count_dc;
 extern int thereflg;	
 extern double tempmatpar;
 extern vector<int> rest_dispdof;
-extern int dof, numnode=0;
-extern double obj_exec_time = 0;
+extern int dof, numnode;
+extern double obj_exec_time;
 extern int order;
-extern double TOL = 1e-10;
+extern double TOL;
 extern vector<double> weights;
 extern vector<double> values;
 struct BB {
