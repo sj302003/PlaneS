@@ -67,8 +67,10 @@ extern double TOL;
 extern vector<double> weights;
 extern vector<double> values;
 struct BB {
-	double x = 0;
-	double y = 0;
+	double x;
+	double y;
+	// double x = 0;
+	// double y = 0;
 	double detJ;
 	vector<vector<double> > Jmat;
 	vector<vector<double> > Bd;
