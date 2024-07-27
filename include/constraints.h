@@ -149,4 +149,31 @@ struct GQVandW {
 };
 extern vector<double> knwndisp;
 
+struct BB {
+	double x = 0;
+	double y = 0;
+	double detJ;
+	vector<vector<double> > Jmat;
+	vector<vector<double> > Bd;
+	vector<vector<double> > Bsmat;
+};
+
+extern double JacobianDet
+extern vector<vector<double>> JacobianInverse
+extern vector<vector<double>> Jacobian
+extern vector<vector<double>> dN_ds
+extern vector<vector<double>> dN_dt
+extern vector<vector<double>> xcoord
+extern vector<vector<double>> ycoord
+extern vector<vector<double>> matX
+extern vector<vector<double>> matY
+extern vector<vector<double>> Bd
+extern vector<vector<double>> Bs
+extern double *forceX
+extern double *forceY
+extern double *defX
+extern double *defY
+extern double *X
+extern double *Y
+extern int n
 #endif
