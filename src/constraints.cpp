@@ -132,6 +132,8 @@ int Amat_rows = 0;
 int Amat_cols = 0;
 int nn = 0;
 int nl = 0;
+const double EPS = 1E-13;
+std::vector<int> rset;
 // double myconstraint(unsigned, const double*, double*, void* );
 // struct GQVandW {
 // 	vector<double> value;

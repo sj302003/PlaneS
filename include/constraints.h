@@ -74,6 +74,8 @@ extern int Amat_cols;
 extern int nn;
 extern int nl;
 extern int numele;
+extern const double EPS;
+extern vector<int> rset;
 extern vector<double> Fvector(row);
 struct BB {
 	double x;
@@ -158,22 +160,22 @@ struct BB {
 	vector<vector<double> > Bsmat;
 };
 
-extern double JacobianDet
-extern vector<vector<double>> JacobianInverse
-extern vector<vector<double>> Jacobian
-extern vector<vector<double>> dN_ds
-extern vector<vector<double>> dN_dt
-extern vector<vector<double>> xcoord
-extern vector<vector<double>> ycoord
-extern vector<vector<double>> matX
-extern vector<vector<double>> matY
-extern vector<vector<double>> Bd
-extern vector<vector<double>> Bs
-extern double *forceX
-extern double *forceY
-extern double *defX
-extern double *defY
-extern double *X
-extern double *Y
-extern int n
+extern double JacobianDet;
+extern vector<vector<double>> JacobianInverse;
+extern vector<vector<double>> Jacobian;
+extern vector<vector<double>> dN_ds;
+extern vector<vector<double>> dN_dt;
+extern vector<vector<double>> xcoord;
+extern vector<vector<double>> ycoord;
+extern vector<vector<double>> matX;
+extern vector<vector<double>> matY;
+extern vector<vector<double>> Bd;
+extern vector<vector<double>> Bs;
+extern double *forceX;
+extern double *forceY;
+extern double *defX;
+extern double *defY;
+extern double *X;
+extern double *Y;
+extern int n;
 #endif
