@@ -54,6 +54,7 @@ struct ObjectiveData {
 };
 
 /////
+extern vector<vector<double>> Amat, intmat;
 extern int colm;
 extern int row;
 extern int count_dc;
@@ -66,6 +67,14 @@ extern int order;
 extern double TOL;
 extern vector<double> weights;
 extern vector<double> values;
+extern double *grad2;
+extern double* grad1;
+extern int Amat_rows;
+extern int Amat_cols;
+extern int nn;
+extern int nl;
+extern int numele;
+extern vector<double> Fvector(row);
 struct BB {
 	double x;
 	double y;
@@ -131,7 +140,6 @@ struct Cnstrelret {
 	vector<vector<double>> dfdstress;
 };
 
-
 extern double myfunc(unsigned, const double*, double*, void*);
 extern void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 // double myconstraint(unsigned, const double*, double*, void* );
@@ -140,4 +148,5 @@ struct GQVandW {
 	vector<double> weight;
 };
 extern vector<double> knwndisp;
+
 #endif

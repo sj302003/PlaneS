@@ -47,6 +47,7 @@ int sz;
 //     int nmemb;
 // };
 
+vector<vector<double>> Amat, intmat;
 int colm;
 int row;
 int count_dc = 0;
@@ -59,6 +60,8 @@ int order;
 double TOL = 1e-10;
 vector<double> weights;
 vector<double> values;
+int numele = 0;
+vector<double> Fvector(row);
 // struct BB {
 // 	double x = 0;
 // 	double y = 0;
@@ -122,9 +125,13 @@ objdata obj_data;
 // 	vector<vector<double>> dfdstress;
 // };
 
+double *grad2 = (double*) malloc((8*nn+nl) * sizeof(double));
+double* grad1 = (double*) malloc(Amat_rows * Amat_cols * sizeof(double));
 
-double myfunc(unsigned, const double*, double*, void*);
-void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
+int Amat_rows = 0;
+int Amat_cols = 0;
+int nn = 0;
+int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
 // struct GQVandW {
 // 	vector<double> value;
