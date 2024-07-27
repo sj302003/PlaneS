@@ -1,125 +1,439 @@
 #include "initialize.h"
-#include <iostream>
+#include "constraints.h"
+#include "constructor.h"
 #include <fstream>
+#include <sstream>
+#include <iostream>
 #include <algorithm>
-#include <set>
+#include <vector>
+#include <cmath>
 
-Initialize::Initialize(const std::vector<node>& nodes, const std::vector<element>& elements, const std::vector<bc>& bc_arr, int order)
-    : nodes(nodes), elements(elements), bc_arr(bc_arr), order(order), count_dc(0) {}
+using namespace std;
 
-void Initialize::startInitializing() {
-    handleBoundaryConditions();
-    assembleAmat();
+
+Initialize::Initialize() {};
+GQVandW getWeightAndValues(int order)
+{
+   
+GQVandW result;
+	vector<double> weights;
+	vector<double> values;
+	if (order == 2) {
+		weights.push_back(1.0000000000000000);
+		weights.push_back(1.0000000000000000);
+		values.push_back(-0.5773502691896257);
+		values.push_back(0.5773502691896257);
+	}
+
+	if (order == 3) {
+		weights.push_back(0.8888888888888888);
+		weights.push_back(0.5555555555555556);
+		weights.push_back(0.5555555555555556);
+		values.push_back(0.0000000000000000);
+		values.push_back(-0.7745966692414834);
+		values.push_back(0.7745966692414834);
+	}
+
+	if (order == 4) {
+		weights.push_back(0.6521451548625461);
+		weights.push_back(0.6521451548625461);
+		weights.push_back(0.3478548451374538);
+		weights.push_back(0.3478548451374538);
+
+		values.push_back(-0.3399810435848563);
+		values.push_back(0.3399810435848563);
+		values.push_back(-0.8611363115940526);
+		values.push_back(0.8611363115940526);
+
+	}
+
+	if (order == 5) {
+		weights.push_back(0.5688888888888889);
+		weights.push_back(0.4786286704993665);
+		weights.push_back(0.4786286704993665);
+		weights.push_back(0.2369268850561891);
+		weights.push_back(0.2369268850561891);
+
+		values.push_back(0.0000000000000000);
+		values.push_back(-0.5384693101056831);
+		values.push_back(0.5384693101056831);
+		values.push_back(-0.9061798459386640);
+		values.push_back(0.9061798459386640);
+
+	}
+
+	if (order == 6) {
+		weights.push_back(0.3607615730481386);
+		weights.push_back(0.3607615730481386);
+		weights.push_back(0.4679139345726910);
+		weights.push_back(0.4679139345726910);
+		weights.push_back(0.1713244923791704);
+		weights.push_back(0.1713244923791704);
+
+		values.push_back(-0.6612093864662645);
+		values.push_back(0.6612093864662645);
+		values.push_back(-0.2386191860831969);
+		values.push_back(0.2386191860831969);
+		values.push_back(-0.9324695142031521);
+		values.push_back(0.9324695142031521);
+	}
+
+	if (order == 7) {
+		weights.push_back(0.4179591836734694);
+		weights.push_back(0.3818300505051189);
+		weights.push_back(0.3818300505051189);
+		weights.push_back(0.2797053914892766);
+		weights.push_back(0.2797053914892766);
+		weights.push_back(0.1294849661688697);
+		weights.push_back(0.1294849661688697);
+
+		values.push_back(0.0000000000000000);
+		values.push_back(-0.4058451513773972);
+		values.push_back(0.4058451513773972);
+		values.push_back(-0.7415311855993945);
+		values.push_back(0.7415311855993945);
+		values.push_back(-0.9491079123427585);
+		values.push_back(0.9491079123427585);
+
+	}
+
+	if (order == 8) {
+		weights.push_back(0.3626837833783620);
+		weights.push_back(0.3626837833783620);
+		weights.push_back(0.3137066458778873);
+		weights.push_back(0.3137066458778873);
+		weights.push_back(0.2223810344533745);
+		weights.push_back(0.2223810344533745);
+		weights.push_back(0.1012285362903763);
+		weights.push_back(0.1012285362903763);
+
+		values.push_back(-0.1834346424956498);
+		values.push_back(0.1834346424956498);
+		values.push_back(-0.5255324099163290);
+		values.push_back(0.5255324099163290);
+		values.push_back(-0.7966664774136267);
+		values.push_back(0.7966664774136267);
+		values.push_back(-0.9602898564975363);
+		values.push_back(0.9602898564975363);
+	}
+
+	if (order == 9) {
+		weights.push_back(0.3302393550012598);
+		weights.push_back(0.1806481606948574);
+		weights.push_back(0.1806481606948574);
+		weights.push_back(0.0812743883615744);
+		weights.push_back(0.0812743883615744);
+		weights.push_back(0.3123470770400029);
+		weights.push_back(0.3123470770400029);
+		weights.push_back(0.2606106964029354);
+		weights.push_back(0.2606106964029354);
+
+		values.push_back(0.0000000000000000);
+		values.push_back(-0.8360311073266358);
+		values.push_back(0.8360311073266358);
+		values.push_back(-0.9681602395076261);
+		values.push_back(0.9681602395076261);
+		values.push_back(-0.3242534234038089);
+		values.push_back(0.3242534234038089);
+		values.push_back(-0.6133714327005904);
+		values.push_back(0.6133714327005904);
+	}
+
+	if (order == 10) {
+		weights.push_back(0.2955242247147529);
+		weights.push_back(0.2955242247147529);
+		weights.push_back(0.2692667193099963);
+		weights.push_back(0.2692667193099963);
+		weights.push_back(0.2190863625159820);
+		weights.push_back(0.2190863625159820);
+		weights.push_back(0.1494513491505806);
+		weights.push_back(0.1494513491505806);
+		weights.push_back(0.0666713443086881);
+		weights.push_back(0.0666713443086881);
+
+		values.push_back(-0.1488743389816312);
+		values.push_back(0.1488743389816312);
+		values.push_back(-0.4333953941292472);
+		values.push_back(0.4333953941292472);
+		values.push_back(-0.6794095682990244);
+		values.push_back(0.6794095682990244);
+		values.push_back(-0.8650633666889845);
+		values.push_back(0.8650633666889845);
+		values.push_back(-0.9739065285171717);
+		values.push_back(0.9739065285171717);
+	}
+	result.weight = weights;
+	result.value = values;
+	return result;
 }
 
-void Initialize::handleBoundaryConditions() {
-    for (const auto& temp : bc_arr) {
-        if (temp.dc_x1 == 1) {
-            int dof = 2 * temp.node1;
-            if (std::find(rest_dispdof.begin(), rest_dispdof.end(), dof) == rest_dispdof.end()) {
-                rest_dispdof.push_back(dof);
-                knwndisp.push_back(temp.dispvec[0]);
-                count_dc++;
-            }
+BB Bsigma_Bd(double *xcoord, double  *ycoord, double s, double t) {
+
+	vector<double>Nis(4);
+	Nis[0] = (t - 1) / 4;
+	Nis[1] = (1 - t) / 4;
+	Nis[2] = (t + 1) / 4;
+	Nis[3] = -(t + 1) / 4;
+
+	vector<double>Nit(4);
+	Nit[0] = (s - 1) / 4;
+	Nit[1] = -(s + 1) / 4;
+	Nit[2] = (s + 1) / 4;
+	Nit[3] = (1 - s) / 4;
+
+	vector<double>N(4);
+	N[0] = (1 - s) * (1 - t) / 4;
+	N[1] = (1 + s) * (1 - t) / 4;
+	N[2] = (1 + s) * (1 + t) / 4;
+	N[3] = (1 - s) * (1 + t) / 4;
+
+	double matX = 0, matY = 0;
+	for (int i = 0; i < 4; i++) {
+		matX += N[i] * xcoord[i];
+		matY += N[i] * ycoord[i];
+	}
+
+	vector<vector<double> > Jmat;
+	vector<double> Jmatrow(2);
+	for (int i = 0; i < 2; i++) {
+		Jmat.push_back(Jmatrow);
+		for (int j = 0; j < 2; j++)
+			Jmat[i][j] = 0;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		Jmat[0][0] += Nis[i] * xcoord[i];
+		Jmat[0][1] += Nit[i] * xcoord[i];
+		Jmat[1][0] += Nis[i] * ycoord[i];
+		Jmat[1][1] += Nit[i] * ycoord[i];
+	}
+
+	vector<vector<double> > invJ(2, vector<double>(2, 0));
+	double detJ = (Jmat[0][0] * Jmat[1][1]) - (Jmat[0][1] * Jmat[1][0]);
+	invJ[0][0] = Jmat[1][1] / detJ;
+	invJ[0][1] = -(Jmat[0][1]) / detJ;
+	invJ[1][0] = -(Jmat[1][0]) / detJ;
+	invJ[1][1] = Jmat[0][0] / detJ;
+
+	vector<vector<double> > Bd;
+	vector<double>Bdrow(8);
+	vector<vector<double> > Bs;
+	vector<double> Bsrow(24);
+	for (int i = 0; i < 3; i++) {
+		Bd.push_back(Bdrow);
+		Bs.push_back(Bsrow);
+		for (int j = 0; j < 8; j++)
+			Bd[i][j] = 0;
+		for (int j = 0; j < 24; j++)
+			Bs[i][j] = 0;
+	}
+
+	vector<vector<double> > Tmat;
+	vector<double>Tmatrow(24);
+	for (int i = 0; i < 24; i++) {
+		Tmat.push_back(Tmatrow);
+		for (int j = 0; j < 24; j++)
+			Tmat[i][j] = 0;
+	}
+	vector<vector<double> > T1mat;
+	vector<double>T1matrow(6);
+	for (int i = 0; i < 6; i++) {
+		T1mat.push_back(T1matrow);
+		for (int j = 0; j < 6; j++)
+			T1mat[i][j] = 0;
+	}
+
+	Bd[0][0] = ((Nis[0] * invJ[0][0]) + (Nit[0] * invJ[1][0]));
+	Bd[0][2] = ((Nis[1] * invJ[0][0]) + (Nit[1] * invJ[1][0]));
+	Bd[0][4] = ((Nis[2] * invJ[0][0]) + (Nit[2] * invJ[1][0]));
+	Bd[0][6] = ((Nis[3] * invJ[0][0]) + (Nit[3] * invJ[1][0]));
+
+	Bd[1][1] = ((Nis[0] * invJ[0][1]) + (Nit[0] * invJ[1][1]));
+	Bd[1][3] = ((Nis[1] * invJ[0][1]) + (Nit[1] * invJ[1][1]));
+	Bd[1][5] = ((Nis[2] * invJ[0][1]) + (Nit[2] * invJ[1][1]));
+	Bd[1][7] = ((Nis[3] * invJ[0][1]) + (Nit[3] * invJ[1][1]));
+
+	Bd[2][0] = ((Nis[0] * invJ[0][1]) + (Nit[0] * invJ[1][1]));
+	Bd[2][2] = ((Nis[1] * invJ[0][1]) + (Nit[1] * invJ[1][1]));
+	Bd[2][4] = ((Nis[2] * invJ[0][1]) + (Nit[2] * invJ[1][1]));
+	Bd[2][6] = ((Nis[3] * invJ[0][1]) + (Nit[3] * invJ[1][1]));
+
+	Bd[2][1] = ((Nis[0] * invJ[0][0]) + (Nit[0] * invJ[1][0]));
+	Bd[2][3] = ((Nis[1] * invJ[0][0]) + (Nit[1] * invJ[1][0]));
+	Bd[2][5] = ((Nis[2] * invJ[0][0]) + (Nit[2] * invJ[1][0]));
+	Bd[2][7] = ((Nis[3] * invJ[0][0]) + (Nit[3] * invJ[1][0]));
+
+	vector<vector<double> > Dmat(3, vector<double>(3, 0));
+	Dmat[0][0] = (invJ[1][1] * invJ[1][1]);
+	Dmat[0][1] = (invJ[0][1] * invJ[0][1]);
+	Dmat[0][2] = -2 * (invJ[1][1] * invJ[0][1]);
+	Dmat[1][0] = (invJ[1][0] * invJ[1][0]);
+	Dmat[1][1] = (invJ[0][0] * invJ[0][0]);
+	Dmat[1][2] = -2 * (invJ[0][0] * invJ[1][0]);
+	Dmat[2][0] = -(invJ[1][0] * invJ[1][1]);
+	Dmat[2][1] = -(invJ[0][0] * invJ[0][1]);
+	Dmat[2][2] = ((invJ[0][0] * invJ[1][1]) + (invJ[0][1] * invJ[1][0]));
+
+	T1mat[0][0] = 1;
+	T1mat[1][1] = Jmat[0][0];
+	T1mat[1][2] = Jmat[1][0];
+	T1mat[2][1] = Jmat[0][1];
+	T1mat[2][2] = Jmat[1][1];
+	T1mat[3][3] = (Jmat[0][0] * Jmat[0][0]);
+	T1mat[3][4] = (Jmat[1][0] * Jmat[1][0]);
+	T1mat[3][5] = 2 * (Jmat[0][0] * Jmat[1][0]);
+	T1mat[4][3] = (Jmat[0][1] * Jmat[0][1]);
+	T1mat[4][4] = (Jmat[1][1] * Jmat[1][1]);
+	T1mat[4][5] = 2 * (Jmat[0][1] * Jmat[1][1]);
+	T1mat[5][3] = (Jmat[0][0] * Jmat[0][1]);
+	T1mat[5][4] = (Jmat[1][0] * Jmat[1][1]);
+	T1mat[5][5] = ((Jmat[0][0] * Jmat[1][1]) + (Jmat[0][1] * Jmat[1][0]));
+
+	Tmat[0][0] = Tmat[6][6] = Tmat[12][12] = Tmat[18][18] = 1;
+	Tmat[1][1] = Tmat[7][7] = Tmat[13][13] = Tmat[19][19] = T1mat[1][1];
+	Tmat[1][2] = Tmat[7][8] = Tmat[13][14] = Tmat[19][20] = T1mat[1][2];
+	Tmat[2][1] = Tmat[8][7] = Tmat[14][13] = Tmat[20][19] = T1mat[2][1];
+	Tmat[2][2] = Tmat[8][8] = Tmat[14][14] = Tmat[20][20] = T1mat[2][2];
+	Tmat[3][3] = Tmat[9][9] = Tmat[15][15] = Tmat[21][21] = T1mat[3][3];
+	Tmat[3][4] = Tmat[9][10] = Tmat[15][16] = Tmat[21][22] = T1mat[3][4];
+	Tmat[3][5] = Tmat[9][11] = Tmat[15][17] = Tmat[21][23] = T1mat[3][5];
+	Tmat[4][3] = Tmat[10][9] = Tmat[16][15] = Tmat[22][21] = T1mat[4][3];
+	Tmat[4][4] = Tmat[10][10] = Tmat[16][16] = Tmat[22][22] = T1mat[4][4];
+	Tmat[4][5] = Tmat[10][11] = Tmat[16][17] = Tmat[22][23] = T1mat[4][5];
+	Tmat[5][3] = Tmat[11][9] = Tmat[17][15] = Tmat[23][21] = T1mat[5][3];
+	Tmat[5][4] = Tmat[11][10] = Tmat[17][16] = Tmat[23][22] = T1mat[5][4];
+	Tmat[5][5] = Tmat[11][11] = Tmat[17][17] = Tmat[23][23] = T1mat[5][5];
+
+	Bs[0][0] = (3 * t * (s - 1) * (s * s + s + 5 * t * t - 5)) / 8;
+	Bs[0][1] = (3 * t * (s - 1) * (s - 1) * (s + 1)) / 8;
+	Bs[0][2] = -((s - 1) * (-3 * s * s * t + s * s - 3 * s * t + s - 15 * t * t * t + 3 * t * t + 15 * t - 3)) / 8;
+	Bs[0][4] = ((s - 1) * (t - 1) * (5 * t * t + 2 * t - 1)) / 8;
+	Bs[0][5] = ((3 * t - 1) * (s - 1) * (s - 1) * (s + 1)) / 8;
+	Bs[0][6] = (3 * t * (s + 1) * (-s * s + s - 5 * t * t + 5)) / 8;
+	Bs[0][7] = (3 * t * (s - 1) * (s + 1) * (s + 1)) / 8;
+	Bs[0][8] = -((s + 1) * (3 * s * s * t - s * s - 3 * s * t + s + 15 * t * t * t - 3 * t * t - 15 * t + 3)) / 8;
+	Bs[0][10] = -((s + 1) * (t - 1) * (5 * t * t + 2 * t - 1)) / 8;
+	Bs[0][11] = ((3 * t - 1) * (s - 1) * (s + 1) * (s + 1)) / 8;
+	Bs[0][12] = -(3 * t * (s + 1) * (-s * s + s - 5 * t * t + 5)) / 8;
+	Bs[0][13] = -(3 * t * (s - 1) * (s + 1) * (s + 1)) / 8;
+	Bs[0][14] = ((s + 1) * (-3 * s * s * t - s * s + 3 * s * t + s - 15 * t * t * t - 3 * t * t + 15 * t + 3)) / 8;
+	Bs[0][16] = ((s + 1) * (t + 1) * (5 * t * t - 2 * t - 1)) / 8;
+	Bs[0][17] = ((3 * t + 1) * (s - 1) * (s + 1) * (s + 1)) / 8;
+	Bs[0][18] = -(3 * t * (s - 1) * (s * s + s + 5 * t * t - 5)) / 8;
+	Bs[0][19] = -(3 * t * (s - 1) * (s - 1) * (s + 1)) / 8;
+	Bs[0][20] = ((s - 1) * (3 * s * s * t + s * s + 3 * s * t + s + 15 * t * t * t + 3 * t * t - 15 * t - 3)) / 8;
+	Bs[0][22] = -((s - 1) * (t + 1) * (5 * t * t - 2 * t - 1)) / 8;
+	Bs[0][23] = ((3 * t + 1) * (s - 1) * (s - 1) * (s + 1)) / 8;
+
+	Bs[1][0] = (3 * s * (t - 1) * (5 * s * s + t * t + t - 5)) / 8;
+	Bs[1][1] = -((t - 1) * (-15 * s * s * s + 3 * s * s - 3 * s * t * t - 3 * s * t + 15 * s + t * t + t - 3)) / 8;
+	Bs[1][2] = (3 * s * (t - 1) * (t - 1) * (t + 1)) / 8;
+	Bs[1][3] = ((s - 1) * (t - 1) * (5 * s * s + 2 * s - 1)) / 8;
+	Bs[1][5] = ((3 * s - 1) * (t - 1) * (t - 1) * (t + 1)) / 8;
+	Bs[1][6] = -(3 * s * (t - 1) * (5 * s * s + t * t + t - 5)) / 8;
+	Bs[1][7] = ((t - 1) * (15 * s * s * s + 3 * s * s + 3 * s * t * t + 3 * s * t - 15 * s + t * t + t - 3)) / 8;
+	Bs[1][8] = -(3 * s * (t - 1) * (t - 1) * (t + 1)) / 8;
+	Bs[1][9] = ((s + 1) * (t - 1) * (-5 * s * s + 2 * s + 1)) / 8;
+	Bs[1][11] = ((3 * s + 1) * (t - 1) * (t - 1) * (t + 1)) / 8;
+	Bs[1][12] = -(3 * s * (t + 1) * (-5 * s * s - t * t + t + 5)) / 8;
+	Bs[1][13] = ((t + 1) * (-15 * s * s * s - 3 * s * s - 3 * s * t * t + 3 * s * t + 15 * s - t * t + t + 3)) / 8;
+	Bs[1][14] = -(3 * s * (t - 1) * (t + 1) * (t + 1)) / 8;
+	Bs[1][15] = -((s + 1) * (t + 1) * (-5 * s * s + 2 * s + 1)) / 8;
+	Bs[1][17] = ((3 * s + 1) * (t - 1) * (t + 1) * (t + 1)) / 8;
+	Bs[1][18] = (3 * s * (t + 1) * (-5 * s * s - t * t + t + 5)) / 8;
+	Bs[1][19] = ((t + 1) * (-15 * s * s * s + 3 * s * s - 3 * s * t * t + 3 * s * t + 15 * s + t * t - t - 3)) / 8;
+	Bs[1][20] = (3 * s * (t - 1) * (t + 1) * (t + 1)) / 8;
+	Bs[1][21] = -((s - 1) * (t + 1) * (5 * s * s + 2 * s - 1)) / 8;
+	Bs[1][23] = ((3 * s - 1) * (t - 1) * (t + 1) * (t + 1)) / 8;
+
+	Bs[2][0] = -(15 * s * s * s * s + 18 * s * s * t * t - 36 * s * s + 15 * t * t * t * t - 36 * t * t + 24) / 32;
+	Bs[2][1] = -((3 * s + 1) * (s - 1) * (5 * s * s + 2 * s + 6 * t * t - 9)) / 32;
+	Bs[2][2] = -((3 * t + 1) * (t - 1) * (6 * s * s + 5 * t * t + 2 * t - 9)) / 32;
+	Bs[2][3] = -((5 * s + 1) * (s - 1) * (s - 1) * (s + 1)) / 32;
+	Bs[2][4] = -((5 * t + 1) * (t - 1) * (t - 1) * (t + 1)) / 32;
+	Bs[2][5] = -((3 * s + 1) * (3 * t + 1) * (s - 1) * (t - 1)) / 16;
+	Bs[2][6] = (15 * s * s * s * s + 18 * s * s * t * t - 36 * s * s + 15 * t * t * t * t - 36 * t * t + 24) / 32;
+	Bs[2][7] = ((3 * s - 1) * (s + 1) * (-5 * s * s + 2 * s - 6 * t * t + 9)) / 32;
+	Bs[2][8] = ((3 * t + 1) * (t - 1) * (6 * s * s + 5 * t * t + 2 * t - 9)) / 32;
+	Bs[2][9] = ((5 * s - 1) * (s - 1) * (s + 1) * (s + 1)) / 32;
+	Bs[2][10] = ((5 * t + 1) * (t - 1) * (t - 1) * (t + 1)) / 32;
+	Bs[2][11] = -((3 * s - 1) * (3 * t + 1) * (s + 1) * (t - 1)) / 16;
+	Bs[2][12] = -(15 * s * s * s * s + 18 * s * s * t * t - 36 * s * s + 15 * t * t * t * t - 36 * t * t + 24) / 32;
+	Bs[2][13] = -((3 * s - 1) * (s + 1) * (-5 * s * s + 2 * s - 6 * t * t + 9)) / 32;
+	Bs[2][14] = -((3 * t - 1) * (t + 1) * (-6 * s * s - 5 * t * t + 2 * t + 9)) / 32;
+	Bs[2][15] = -((5 * s - 1) * (s - 1) * (s + 1) * (s + 1)) / 32;
+	Bs[2][16] = -((5 * t - 1) * (t - 1) * (t + 1) * (t + 1)) / 32;
+	Bs[2][17] = -((3 * s - 1) * (3 * t - 1) * (s + 1) * (t + 1)) / 16;
+	Bs[2][18] = (15 * s * s * s * s + 18 * s * s * t * t - 36 * s * s + 15 * t * t * t * t - 36 * t * t + 24) / 32;
+	Bs[2][19] = ((3 * s + 1) * (s - 1) * (5 * s * s + 2 * s + 6 * t * t - 9)) / 32;
+	Bs[2][20] = ((3 * t - 1) * (t + 1) * (-6 * s * s - 5 * t * t + 2 * t + 9)) / 32;
+	Bs[2][21] = ((5 * s + 1) * (s - 1) * (s - 1) * (s + 1)) / 32;
+	Bs[2][22] = ((5 * t - 1) * (t - 1) * (t + 1) * (t + 1)) / 32;
+	Bs[2][23] = -((3 * s + 1) * (3 * t - 1) * (s - 1) * (t + 1)) / 16;
+
+	vector<vector<double> > Bs1mat(3, vector<double>(24, 0));  // Bs1mat = Dmat*Bs
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 24; j++) {
+			Bs1mat[i][j] = 0;
+			for (int k = 0; k < 3; k++) {
+				Bs1mat[i][j] += Dmat[i][k] * Bs[k][j];
+			}
+		}
+	}
+
+
+	vector<vector<double> > Bsmat(3, vector<double>(24, 0)); // Bsmat = Dmat*Bs*Tmat = Bs1mat*Tmat 
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 24; j++) {
+			Bsmat[i][j] = 0;
+			for (int k = 0; k < 24; k++) {
+				Bsmat[i][j] += Bs1mat[i][k] * Tmat[k][j];
+			}
+		}
+	}
+
+	BB BBresult;
+	BBresult.x = matX;
+	BBresult.y = matY;
+	BBresult.Jmat = Jmat;
+	BBresult.detJ = detJ;
+	BBresult.Bd = Bd;
+	BBresult.Bsmat = Bsmat;
+	return BBresult;
+}
+
+int compute_rank(vector<vector<double>> A) {
+    int n = A.size();
+    int m = A[0].size();
+
+    int rank = 0;
+    vector<bool> row_selected(n, false);
+    for (int i = 0; i < m; ++i) {
+        int j;
+        for (j = 0; j < n; ++j) {
+            if (!row_selected[j] && abs(A[j][i]) > EPS)
+                break;
         }
-        if (temp.dc_y1 == 1) {
-            int dof = 2 * temp.node1 + 1;
-            if (std::find(rest_dispdof.begin(), rest_dispdof.end(), dof) == rest_dispdof.end()) {
-                rest_dispdof.push_back(dof);
-                knwndisp.push_back(temp.dispvec[1]);
-                count_dc++;
-            }
-        }
-        if (temp.dc_x2 == 1) {
-            int dof = 2 * temp.node2;
-            if (std::find(rest_dispdof.begin(), rest_dispdof.end(), dof) == rest_dispdof.end()) {
-                rest_dispdof.push_back(dof);
-                knwndisp.push_back(temp.dispvec[2]);
-                count_dc++;
-            }
-        }
-        if (temp.dc_y2 == 1) {
-            int dof = 2 * temp.node2 + 1;
-            if (std::find(rest_dispdof.begin(), rest_dispdof.end(), dof) == rest_dispdof.end()) {
-                rest_dispdof.push_back(dof);
-                knwndisp.push_back(temp.dispvec[3]);
-                count_dc++;
+
+        if (j != n) {
+            ++rank;
+	    rset.push_back(j);
+            row_selected[j] = true;
+            for (int p = i + 1; p < m; ++p)
+                A[j][p] /= A[j][i];
+            for (int k = 0; k < n; ++k) {
+                if (k != j && abs(A[k][i]) > EPS) {
+                    for (int p = i + 1; p < m; ++p)
+                        A[k][p] -= A[j][p] * A[k][i];
+                }
             }
         }
     }
-
-    std::sort(rest_dispdof.begin(), rest_dispdof.end());
+    return rank;
 }
 
-void Initialize::assembleAmat() {
-    GQVandW GQdata = getWeightAndValues(order);
-    int numnode = nodes.size();
-    int bndsdes = bc_arr.size();
-    int colm = 8 * numnode + count_dc;
-    int row = 7 * bndsdes + count_dc;
-
-    Amat.resize(row, std::vector<double>(colm, 0));
-    Fvector.resize(row, 0);
-
-    int rowindx = 0;
-    for (const auto& temp : bc_arr) {
-        RetBC res = boundry_condition_fun(temp, GQdata, order);
-        const auto& tempkmat = res.Kmat;
-        const auto& tempFmat = res.Fmat;
-
-        std::vector<int> colindx_sts(12);
-        for (int i = 0; i < 6; ++i) {
-            colindx_sts[i] = 2 * numnode + 6 * temp.node1 + i;
-            colindx_sts[i + 6] = 2 * numnode + 6 * temp.node2 + i;
-        }
-
-        if (temp.dc_x1 == 0 && temp.dc_x2 == 0 && temp.dc_y1 == 0 && temp.dc_y2 == 0) {
-            for (int a = 0; a < 7; ++a) {
-                for (int b = 0; b < 12; ++b) {
-                    Amat[rowindx + a][colindx_sts[b]] = tempkmat[a][b];
-                }
-                for (int c = 0; c < 4; ++c) {
-                    Fvector[rowindx + a] += tempFmat[a][c] * temp.tractvec[c];
-                }
-            }
-            rowindx += 7;
-        } else {
-            std::vector<int> colindx_trct;
-            std::vector<int> ddof;
-            if (temp.dc_x1 == 1) ddof.push_back(2 * temp.node1);
-            if (temp.dc_y1 == 1) ddof.push_back(2 * temp.node1 + 1);
-            if (temp.dc_x2 == 1) ddof.push_back(2 * temp.node2);
-            if (temp.dc_y2 == 1) ddof.push_back(2 * temp.node2 + 1);
-
-            for (int d : ddof) {
-                auto it = std::find(rest_dispdof.begin(), rest_dispdof.end(), d);
-                if (it != rest_dispdof.end()) {
-                    colindx_trct.push_back(std::distance(rest_dispdof.begin(), it));
-                }
-            }
-
-            for (int a = 0; a < 7; ++a) {
-                for (int b = 0; b < 12; ++b) {
-                    Amat[rowindx + a][colindx_sts[b]] = tempkmat[a][b];
-                }
-                for (int c = 0; c < colindx_trct.size(); ++c) {
-                    Amat[rowindx + a][8 * numnode + colindx_trct[c]] = -tempFmat[a][c];
-                }
-            }
-            rowindx += 7;
-        }
-    }
-
-    for (int a = 0; a < count_dc; ++a) {
-        Amat[rowindx + a][rest_dispdof[a]] = 1;
-        Fvector[rowindx + a] = knwndisp[a];
-    }
-}
-
-const std::vector<std::vector<double>>& Initialize::getAmat() const {
-    return Amat;
-}
-
-const std::vector<double>& Initialize::getFvector() const {
-    return Fvector;
+void Initialize::startInitializing()
+{
+  
+    
 }
