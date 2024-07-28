@@ -1,4 +1,5 @@
 #include "constraints.h"
+
 #include<iostream>
 #include<vector>
 
@@ -84,6 +85,7 @@
  int rank;
  vector<bool> row_selected(n, false);
 
+ vector<vector<double>> Amat, intmat;
  int colm;
  int row;
  int count_dc = 0;
@@ -96,6 +98,8 @@
  double TOL = 1e-10;
  vector<double> weights;
  vector<double> values;
+ int numele = 0;
+ vector<double> Fvector(row);
  vector<BB> BB_results_mat(order);
 
  int ele = boundry.ele;
@@ -165,10 +169,15 @@
 // 	vector<vector<double>> dfdstrain;
 // 	vector<vector<double>> dfdstress;
 // };
-
-
- double myfunc(unsigned, const double*, double*, void*);
- void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
+ 
+ double *grad2 = (double*) malloc((8*nn+nl) * sizeof(double));
+ double* grad1 = (double*) malloc(Amat_rows * Amat_cols * sizeof(double));
+//  double myfunc(unsigned, const double*, double*, void*);
+//  void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
+int Amat_rows = 0;
+int Amat_cols = 0;
+int nn = 0;
+int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
  GQVandW result;
  GQVandW GQdata = getWeightAndValues(order);

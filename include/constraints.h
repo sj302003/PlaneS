@@ -91,6 +91,7 @@ extern int m = A[0].size();
 extern int rank;
 extern vector<bool> row_selected(n, false);
 
+extern vector<vector<double>> Amat, intmat;
 extern int colm;
 extern int row;
 extern int count_dc = 0;
@@ -103,6 +104,14 @@ extern int order;
 extern double TOL = 1e-10;
 extern vector<double> weights;
 extern vector<double> values;
+extern double *grad2;
+extern double* grad1;
+extern int Amat_rows;
+extern int Amat_cols;
+extern int nn;
+extern int nl;
+extern int numele;
+extern vector<double> Fvector(row);
 extern vector<BB> BB_results_mat(order);
 
 extern int ele = boundry.ele;
@@ -173,7 +182,6 @@ struct Cnstrelret {
 	vector<vector<double>> dfdstress;
 };
 
-
 extern double myfunc(unsigned, const double*, double*, void*);
 extern void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 // double myconstraint(unsigned, const double*, double*, void* );
@@ -190,7 +198,7 @@ extern vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, G
 extern vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
 extern vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
 
-extern vector<vector<double>> A; 
+externvector<vector<double>> A; 
 
 extern vector<double> knwndisp;
 #endif

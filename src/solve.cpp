@@ -2,7 +2,9 @@
 #include "objectfunc.h"
 #include <nlopt.hpp>
 #include <iostream>
+#include <fstream>
 #include <cmath>
+#include <omp.h>
 
 Solve::Solve() {}
 
@@ -15,79 +17,65 @@ void Solve::Solver() {
 
     nlopt::opt opt(nlopt::LD_SLSQP, d.size());
 
-    // Define the objective function data
-    ObjectiveData objData;
-    objData.L = L;
-    objData.A = A;
-    objData.parameters = parameters;
-    objData.nmemb = nmemb;
-    objData.funcname = funcname;
+    Amat_rows = Amat.size();
+    Amat_cols = Amat[0].size();
 
-    opt.set_min_objective(objectfunc, &objData);
+    obj_data.nodecord = nodes;
+    obj_data.elemdat = elements;
+    obj_data.dispscalefac = 1;
+    obj_data.numnode = numnode;
+    obj_data.numele = numele;
+    obj_data.lnpos = count_dc;
 
-    // Define the constraint function data
-    ConstraintData consData;
-    consData.BC = BC;
-    consData.F = F;
+    nn = numnode;
+    nl = count_dc;
 
-    opt.add_equality_constraint(constraint_eqn, &consData, 1e-8);
+    const unsigned n = 8 * numnode + count_dc;
 
-    opt.set_xtol_rel(1e-10);
-    opt.set_maxeval(2000);
-
-    double fval;
-
-    nlopt::result res = opt.optimize(d, fval);
-
-    std::cout << "Optimization result: " << res << std::endl;
-    std::cout << "Objective function value: " << fval << std::endl;
-
-    for (size_t i = nmemb + 2 * nnode - ns; i < d.size(); i++) {
-        Fr.push_back(d[i]);
-    }
-    int sz = Fr.size();
-    std::cout << nmemb << " " << nnode << " " << ns << std::endl;
-
-    std::cout << "Member Forces" << std::endl;
-    for (int i = 0; i < nmemb; i++) {
-        std::cout << "F" << m_elements[i]->getIndex() << " = " << round(d[i] * 1e6) / 1e6 << std::endl;
-    }
-
-    std::vector<int> xyzs, nodenumber;
-    for (size_t i = 0; i < BC.size(); i++) {
-        for (int j = 1; j < 3; j++) {
-            if (BC[i][j] == 1) {
-                xyzs.push_back(i);
-                nodenumber.push_back(j);
+    std::vector<std::vector<double>> intmat(n, std::vector<double>(n, 0));
+    for (unsigned i = 0; i < n; ++i) {
+        for (unsigned j = 0; j < n; ++j) {
+            for (unsigned k = 0; k < Amat.size(); ++k) {
+                intmat[i][j] += Amat[k][i] * Amat[k][j];
             }
         }
     }
 
-    int k = 0;
-    std::string c;
-    std::cout << "______________________________________________" << std::endl;
-    std::cout << "Node Displacements" << std::endl;
-    for (int i = nmemb; i < nmemb + sb[0]; i++) {
-        if (nodenumber[k] == 0) {
-            c = 'x';
-        } else {
-            c = 'y';
-        }
-        std::cout << 'u' << c << xyzs[k] + 1 << " = " << d[i] / multiplier << std::endl;
-        k += 1;
+    constraint_data.Amat = Amat;
+    constraint_data.Fvec = Fvector;
+
+    const double toler = 1e-14;
+    unsigned m = row;
+    std::vector<double> tol(m, toler);
+
+    nlopt::opt opt(nlopt::LD_SLSQP, n);
+    opt.set_min_objective(myfunc, &obj_data);
+    opt.add_equality_mconstraint(myconstraint, &constraint_data, tol);
+    opt.set_xtol_rel(toler);
+    opt.set_ftol_rel(toler);
+    opt.set_ftol_abs(toler / 10000);
+
+    std::vector<double> x(n, 0);
+    for (unsigned i = 2 * numnode; i < (8 * numnode + count_dc); ++i) {
+        x[i] = 20;
     }
 
-    k = 0;
-    std::cout << "______________________________________________" << std::endl;
-    std::cout << "Support Reactions" << std::endl;
-    for (int i = 0; i < sz; i++) {
-        if (nodenumber[i] == 0) {
-            c = 'x';
-        } else {
-            c = 'y';
-        }
+    double minf;
+    double start = omp_get_wtime();
+    int answer = opt.optimize(x, minf);
+    double end = omp_get_wtime();
 
-        double reaction = round(Fr[i] * 1e6) / 1e6;
-        std::cout << 'F' << c << xyzs[i] + 1 << " = " << reaction << std::endl;
+    std::cout << "Time taken: " << end - start << std::endl;
+    if (answer < 0) {
+        std::cout << "Optimization did not converge. Exit code: " << answer << std::endl;
+    } else {
+        std::cout << "Optimization converged\nminf = " << minf << "\nexit flag = " << answer << std::endl;
     }
+
+    ofstream outoptfile;
+    outoptfile.open("With_Temp_Matrix_6.csv");
+    for (const auto& xi : x) {
+        outoptfile << xi << std::endl;
+    }
+    outoptfile.close();
 }
