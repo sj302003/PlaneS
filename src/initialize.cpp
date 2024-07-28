@@ -12,8 +12,8 @@ using namespace std;
 
 
 Initialize::Initialize() {};
-GQVandW getWeightAndValues(int order)
-{
+
+GQVandW Initialize::getWeightAndValues(int order) {
    
 GQVandW result;
 	vector<double> weights;
@@ -167,7 +167,7 @@ GQVandW result;
 	return result;
 }
 
-BB Bsigma_Bd(double *xcoord, double  *ycoord, double s, double t) {
+BB Initialize::Bsigma_Bd(double *xcoord, double  *ycoord, double s, double t) {
 
 	vector<double>Nis(4);
 	Nis[0] = (t - 1) / 4;
@@ -402,7 +402,49 @@ BB Bsigma_Bd(double *xcoord, double  *ycoord, double s, double t) {
 	return BBresult;
 }
 
-int compute_rank(vector<vector<double>> A) {
+vector<BB> Initialize::get_BB_results_mat(int k, int order, double *xcoord, double *ycoord, vector<double> values) {
+	vector<BB> BB_results_mat(order);
+	
+	if (k == 2)
+	{
+		for (int i = 0; i < order; i++)
+		{
+			BB_results_mat[i] = Bsigma_Bd(xcoord, ycoord, 1, values[i]);
+		}
+	}
+	else if (k == 4)
+	{
+		for (int i = 0; i < order; i++)
+		{
+			BB_results_mat[i] = Bsigma_Bd(xcoord, ycoord, -1, values[i]);
+		}
+	}
+	else if (k == 3)
+	{
+		for (int i = 0; i < order; i++)
+		{
+			BB_results_mat[i] = Bsigma_Bd(xcoord, ycoord, values[i], 1);
+		}
+	}
+	else if (k == 1)
+	{
+		for (int i = 0; i < order; i++)
+		{
+			BB_results_mat[i] = Bsigma_Bd(xcoord, ycoord, values[i], -1);
+		}
+	}
+	return BB_results_mat;
+}
+
+bool Initialize::cmp_for_desc(int x, int y){
+    if (x > y)
+        return true;
+    else
+        return false;
+}
+
+
+int Initialize::compute_rank(vector<vector<double>> A) {
     int n = A.size();
     int m = A[0].size();
 
@@ -434,6 +476,67 @@ int compute_rank(vector<vector<double>> A) {
 
 void Initialize::startInitializing()
 {
-  
-    
+  order = 6;
+	GQVandW GQdata= getWeightAndValues(order);
+
+    int ele = boundry.ele;
+    double xcoord[4];
+	xcoord[0] = nodes[elements[ele].node1-1].x_cord;
+	xcoord[1] = nodes[elements[ele].node2-1].x_cord;
+	xcoord[2] = nodes[elements[ele].node3-1].x_cord;
+	xcoord[3] = nodes[elements[ele].node4-1].x_cord;
+
+	double ycoord[4];
+	ycoord[0] = nodes[elements[ele].node1-1].y_cord;
+	ycoord[1] = nodes[elements[ele].node2-1].y_cord;
+	ycoord[2] = nodes[elements[ele].node3-1].y_cord;
+	ycoord[3] = nodes[elements[ele].node4-1].y_cord;
+	
+    vector<BB> BB_results_mat;
+    vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
+    vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
+    vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
+    vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+    vector<vector<double>> A
+
+    int rank = compute_rank(A);
+
+    // Output results for verification
+    cout << "Order: " << order << endl;
+    cout << "GQ Weights: ";
+    for (double w : GQdata.weight) {
+        cout << w << " ";
+    }
+    cout << endl;
+
+    cout << "GQ Values: ";
+    for (double v : GQdata.value) {
+        cout << v << " ";
+    }
+    cout << endl;
+
+    cout << "Rank of matrix A: " << rank << endl;
+
+    // Output BB results for verification
+    cout << "BB Results for k=2:" << endl;
+    for (const BB& bb : BB_results_k2) {
+        cout << "x: " << bb.x << ", y: " << bb.y << endl;
+    }
+
+cout << "BB Results for k=4:" << endl;
+    for (const BB& bb : BB_results_k4) {
+        cout << "x: " << bb.x << ", y: " << bb.y << endl;
+    }
+
+    cout << "BB Results for k=3:" << endl;
+    for (const BB& bb : BB_results_k3) {
+        cout << "x: " << bb.x << ", y: " << bb.y << endl;
+    }
+
+    cout << "BB Results for k=1:" << endl;
+    for (const BB& bb : BB_results_k1) {
+        cout << "x: " << bb.x << ", y: " << bb.y << endl;
+    }
+
+
 }

@@ -40,6 +40,7 @@ extern vector<vector<double>> d0;
 extern double fval;
 extern vector<int> sb;
 extern int sz;
+extern vector<int> rset;
 struct ConstraintData {
     vector<vector<double>> BC;
     vector<vector<double>> F;
@@ -54,17 +55,53 @@ struct ObjectiveData {
 };
 
 /////
+extern int k;
+extern double *xcoord; 
+extern double *ycoord; 
+extern double s; 
+extern double t;
+extern vector<double> Nis(4);
+extern vector<double> Nit(4);
+extern vector<double> N(4);
+extern double matX = 0;
+extern double matY = 0;
+
+extern vector<vector<double>> Jmat;
+extern vector<double> Jmatrow(2);
+extern vector<vector<double>> invJ(2, vector<double>(2, 0));
+extern double detJ;
+extern vector<vector<double>> Bd;
+extern vector<double> Bdrow(8);
+extern vector<vector<double>> Bs;
+extern vector<double> Bsrow(24);
+extern vector<vector<double>> Tmat;
+extern vector<double> Tmatrow(24);
+extern vector<vector<double>> T1mat;
+extern vector<double> T1matrow(6);
+extern vector<vector<double>> Dmat(3, vector<double>(3, 0));
+extern vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
+extern vector<vector<double>> Bsmat(3, vector<double>(24, 0));
+
+extern int x;
+extern int y;
+
+extern vector<vector<double>> A;
+extern int n = A.size();
+extern int m = A[0].size();
+extern int rank;
+extern vector<bool> row_selected(n, false);
+
 extern vector<vector<double>> Amat, intmat;
 extern int colm;
 extern int row;
-extern int count_dc;
+extern int count_dc = 0;
 extern int thereflg;	
 extern double tempmatpar;
 extern vector<int> rest_dispdof;
-extern int dof, numnode;
-extern double obj_exec_time;
+extern int dof, numnode=0;
+extern double obj_exec_time = 0;
 extern int order;
-extern double TOL;
+extern double TOL = 1e-10;
 extern vector<double> weights;
 extern vector<double> values;
 extern double *grad2;
@@ -74,14 +111,17 @@ extern int Amat_cols;
 extern int nn;
 extern int nl;
 extern int numele;
-extern const double EPS;
-extern vector<int> rset;
 extern vector<double> Fvector(row);
+extern vector<BB> BB_results_mat(order);
+
+extern int ele = boundry.ele;
+extern double xcoord[4];
+extern double ycoord[4];
+
+extern BB BBresult;
 struct BB {
-	double x;
-	double y;
-	// double x = 0;
-	// double y = 0;
+	double x = 0;
+	double y = 0;
 	double detJ;
 	vector<vector<double> > Jmat;
 	vector<vector<double> > Bd;
@@ -145,37 +185,20 @@ struct Cnstrelret {
 extern double myfunc(unsigned, const double*, double*, void*);
 extern void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 // double myconstraint(unsigned, const double*, double*, void* );
+extern GQVandW result;
+extern GQVandW GQdata = getWeightAndValues(order);
 struct GQVandW {
 	vector<double> value;
 	vector<double> weight;
 };
+
+extern vector<BB> BB_results_mat;
+extern vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
+extern vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
+extern vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
+extern vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+
+externvector<vector<double>> A; 
+
 extern vector<double> knwndisp;
-
-struct BB {
-	double x = 0;
-	double y = 0;
-	double detJ;
-	vector<vector<double> > Jmat;
-	vector<vector<double> > Bd;
-	vector<vector<double> > Bsmat;
-};
-
-extern double JacobianDet;
-extern vector<vector<double>> JacobianInverse;
-extern vector<vector<double>> Jacobian;
-extern vector<vector<double>> dN_ds;
-extern vector<vector<double>> dN_dt;
-extern vector<vector<double>> xcoord;
-extern vector<vector<double>> ycoord;
-extern vector<vector<double>> matX;
-extern vector<vector<double>> matY;
-extern vector<vector<double>> Bd;
-extern vector<vector<double>> Bs;
-extern double *forceX;
-extern double *forceY;
-extern double *defX;
-extern double *defY;
-extern double *X;
-extern double *Y;
-extern int n;
 #endif
