@@ -82,7 +82,7 @@
  vector<vector<double>> A;
  int n = A.size();
  int m = A[0].size();
- int rank;
+ // int rank;
  vector<bool> row_selected(n, false);
 
  vector<vector<double>> Amat, intmat;
@@ -179,18 +179,18 @@ int Amat_cols = 0;
 int nn = 0;
 int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
- GQVandW result;
- GQVandW GQdata = getWeightAndValues(order);
+ //GQVandW result;
+ //GQVandW GQdata = getWeightAndValues(order);
 // struct GQVandW {
 // 	vector<double> value;
 // 	vector<double> weight;
 // };
 
- vector<BB> BB_results_mat;
- vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+ // vector<BB> BB_results_mat;
+ // vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
+ // vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
+ // vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
+ // vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
 
  vector<vector<double>> A; 
 
