@@ -1,12 +1,21 @@
 #include "initialize.h"
 #include "constraints.h"
 #include "constructor.h"
+#include "display.h"
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-void displayResults(const vector<BB>& BB_results_k2, const vector<BB>& BB_results_k4, const vector<BB>& BB_results_k3, const vector<BB>& BB_results_k1, int rank) {
+extern vector<BB> BB_results_k2;
+extern vector<BB> BB_results_k4;
+extern vector<BB> BB_results_k3;
+extern vector<BB> BB_results_k1;
+extern int rank;
+
+Display::Display() {}
+
+void Display::displayResults(const vector<BB>& BB_results_k2, const vector<BB>& BB_results_k4, const vector<BB>& BB_results_k3, const vector<BB>& BB_results_k1, int rank) {
     cout << "Rank of matrix A: " << rank << endl;
 
     // Output BB results for verification
@@ -29,4 +38,8 @@ void displayResults(const vector<BB>& BB_results_k2, const vector<BB>& BB_result
     for (const BB& bb : BB_results_k1) {
         cout << "x: " << bb.x << ", y: " << bb.y << endl;
     }
+}
+
+void Display::startdisplay() {
+    display.displayResults(BB_results_k2, BB_results_k4, BB_results_k3, BB_results_k1, rank);
 }
