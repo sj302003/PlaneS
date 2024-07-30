@@ -13,7 +13,8 @@ int main()
     init.startInitializing();
     Solve solver1;
     solver1.Solver();
-    displayResults(init.BB_results_k2, init.BB_results_k4, init.BB_results_k3, init.BB_results_k1, init.rank);
+    Display display;
+    display.startdisplay();
 
 
     return 0;
