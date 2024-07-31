@@ -82,7 +82,6 @@ const double EPS = 1E-13;
  vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
  vector<vector<double>> Bsmat(3, vector<double>(24, 0));
 
- vector<vector<double>> A;
  int x;
  int y;
  int n = A.size();
@@ -176,7 +175,7 @@ const double EPS = 1E-13;
 // 	vector<vector<double>> dfdstress;
 // };
  
- double *grad2 = (double*) malloc((8*nn+nl) * sizeof(double));
+ double grad2 = (double) malloc((8*nn+nl) * sizeof(double));
  double* grad1 = (double*) malloc(Amat_rows * Amat_cols * sizeof(double));
 //  double myfunc(unsigned, const double*, double*, void*);
 //  void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
@@ -198,7 +197,8 @@ int nl = 0;
  vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
  vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
 
-  
+
+
 
  vector<double> knwndisp;
 #endif
