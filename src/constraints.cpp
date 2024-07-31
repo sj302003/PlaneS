@@ -34,7 +34,7 @@
  double fval;
  vector<int> sb;
  int sz;
- vector<int> rset;
+ std::vector<int> rset;
 		// struct ConstraintData {
 		// 	vector<vector<double>> BC;
 		// 	vector<vector<double>> F;
@@ -60,6 +60,12 @@
  double matX = 0;
  double matY = 0;
 
+int nn = 0;
+int nl = 0;
+const double EPS = 1E-13;
+
+
+
  vector<vector<double>> Jmat;
  vector<double> Jmatrow(2);
  vector<vector<double>> invJ(2, vector<double>(2, 0));
@@ -78,11 +84,9 @@
 
  int x;
  int y;
-
- vector<vector<double>> A;
  int n = A.size();
  int m = A[0].size();
- // int rank;
+ int rank;
  vector<bool> row_selected(n, false);
 
  vector<vector<double>> Amat, intmat;
@@ -102,9 +106,10 @@
  vector<double> Fvector(row);
  vector<BB> BB_results_mat(order);
 
- int ele = boundry.ele;
+ int ele;
  double xcoord[4];
  double ycoord[4];
+
 
  BB BBresult;
 // struct BB {
@@ -170,7 +175,7 @@
 // 	vector<vector<double>> dfdstress;
 // };
  
- double *grad2 = (double*) malloc((8*nn+nl) * sizeof(double));
+ double grad2 = (double) malloc((8*nn+nl) * sizeof(double));
  double* grad1 = (double*) malloc(Amat_rows * Amat_cols * sizeof(double));
 //  double myfunc(unsigned, const double*, double*, void*);
 //  void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
@@ -179,25 +184,21 @@ int Amat_cols = 0;
 int nn = 0;
 int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
- //GQVandW result;
- //GQVandW GQdata = getWeightAndValues(order);
+ GQVandW result;
+ GQVandW GQdata = getWeightAndValues(order);
 // struct GQVandW {
 // 	vector<double> value;
 // 	vector<double> weight;
 // };
 
- // vector<BB> BB_results_mat;
- // vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
- // vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
- // vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
- // vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+ vector<BB> BB_results_mat;
+ vector<BB> BB_results_k2;
+ vector<BB> BB_results_k4;
+ vector<BB> BB_results_k3;
+ vector<BB> BB_results_k1;
 
- // vector<vector<double>> A; 
+
+
 
  vector<double> knwndisp;
-vector<BB> BB_results_k2;
-vector<BB> BB_results_k4;
-vector<BB> BB_results_k3;
-vector<BB> BB_results_k1;
-int rank;
 #endif
