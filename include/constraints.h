@@ -15,7 +15,7 @@ extern vector<Oceane::Nodeptr> m_boundaryElements;
 extern vector<vector<double>> m_loads;
 extern vector<vector<double>> m_fixity;
 extern vector<vector<double>> L;
-extern vector<vector<double>>  A;
+// extern vector<vector<double>>  A;
 extern vector<vector<double>> F;
 extern vector<vector<double>> Breq;
 extern vector<vector<double>> BC;
@@ -63,8 +63,8 @@ extern double t;
 extern vector<double> Nis(4);
 extern vector<double> Nit(4);
 extern vector<double> N(4);
-extern double matX = 0;
-extern double matY = 0;
+extern double matX ;
+extern double matY ;
 
 extern vector<vector<double>> Jmat;
 extern vector<double> Jmatrow(2);
@@ -94,14 +94,14 @@ extern vector<bool> row_selected(n, false);
 extern vector<vector<double>> Amat, intmat;
 extern int colm;
 extern int row;
-extern int count_dc = 0;
+extern int count_dc;
 extern int thereflg;	
 extern double tempmatpar;
 extern vector<int> rest_dispdof;
-extern int dof, numnode=0;
-extern double obj_exec_time = 0;
+extern int dof, numnode;
+extern double obj_exec_time;
 extern int order;
-extern double TOL = 1e-10;
+extern double TOL ;
 extern vector<double> weights;
 extern vector<double> values;
 extern double *grad2;
@@ -114,14 +114,14 @@ extern int numele;
 extern vector<double> Fvector(row);
 extern vector<BB> BB_results_mat(order);
 
-extern int ele = boundry.ele;
+extern int ele;
 extern double xcoord[4];
 extern double ycoord[4];
 
 extern BB BBresult;
 struct BB {
-	double x = 0;
-	double y = 0;
+	double x;
+	double y;
 	double detJ;
 	vector<vector<double> > Jmat;
 	vector<vector<double> > Bd;
@@ -193,12 +193,11 @@ struct GQVandW {
 };
 
 extern vector<BB> BB_results_mat;
-extern vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
-extern vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
-extern vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
-extern vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+extern vector<BB> BB_results_k2;
+extern vector<BB> BB_results_k4;
+extern vector<BB> BB_results_k3;
+extern vector<BB> BB_results_k1;
 
-externvector<vector<double>> A; 
 
 extern vector<double> knwndisp;
 #endif
