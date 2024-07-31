@@ -115,6 +115,7 @@ extern vector<double> Fvector(row);
 extern vector<BB> BB_results_mat(order);
 
 extern int ele;
+const double EPS;
 extern double xcoord[4];
 extern double ycoord[4];
 
@@ -186,7 +187,7 @@ extern double myfunc(unsigned, const double*, double*, void*);
 extern void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 // double myconstraint(unsigned, const double*, double*, void* );
 extern GQVandW result;
-extern GQVandW GQdata = getWeightAndValues(order);
+extern GQVandW GQdata;
 struct GQVandW {
 	vector<double> value;
 	vector<double> weight;
