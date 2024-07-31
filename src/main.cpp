@@ -1,7 +1,9 @@
 #include "read.h"
 #include "initialize.h"
 #include "solve.h"
+#include "display.h"
 #include <iostream>
+#include <vector>
 
 int main() 
 {
@@ -11,6 +13,9 @@ int main()
     init.startInitializing();
     Solve solver1;
     solver1.Solver();
+    Display display;
+    display.startdisplay();
+
 
     return 0;
 }

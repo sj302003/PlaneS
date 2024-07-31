@@ -34,7 +34,7 @@
  double fval;
  vector<int> sb;
  int sz;
-std::vector<int> rset;
+ std::vector<int> rset;
 		// struct ConstraintData {
 		// 	vector<vector<double>> BC;
 		// 	vector<vector<double>> F;
@@ -192,10 +192,10 @@ int nl = 0;
 // };
 
  vector<BB> BB_results_mat;
- vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
- vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
+ vector<BB> BB_results_k2;
+ vector<BB> BB_results_k4;
+ vector<BB> BB_results_k3;
+ vector<BB> BB_results_k1;
 
 
 
