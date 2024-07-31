@@ -195,4 +195,9 @@ int nl = 0;
  vector<vector<double>> A; 
 
  vector<double> knwndisp;
+vector<BB> BB_results_k2;
+vector<BB> BB_results_k4;
+vector<BB> BB_results_k3;
+vector<BB> BB_results_k1;
+int rank;
 #endif
