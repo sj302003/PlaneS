@@ -34,7 +34,7 @@
  double fval;
  vector<int> sb;
  int sz;
- vector<int> rset;
+std::vector<int> rset;
 		// struct ConstraintData {
 		// 	vector<vector<double>> BC;
 		// 	vector<vector<double>> F;
@@ -60,6 +60,12 @@
  double matX = 0;
  double matY = 0;
 
+int nn = 0;
+int nl = 0;
+const double EPS = 1E-13;
+
+
+
  vector<vector<double>> Jmat;
  vector<double> Jmatrow(2);
  vector<vector<double>> invJ(2, vector<double>(2, 0));
@@ -76,10 +82,9 @@
  vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
  vector<vector<double>> Bsmat(3, vector<double>(24, 0));
 
+ vector<vector<double>> A;
  int x;
  int y;
-
- vector<vector<double>> A;
  int n = A.size();
  int m = A[0].size();
  int rank;
@@ -102,9 +107,10 @@
  vector<double> Fvector(row);
  vector<BB> BB_results_mat(order);
 
- int ele = boundry.ele;
+ int ele;
  double xcoord[4];
  double ycoord[4];
+
 
  BB BBresult;
 // struct BB {
@@ -192,7 +198,7 @@ int nl = 0;
  vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
  vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
 
- vector<vector<double>> A; 
+  
 
  vector<double> knwndisp;
 #endif
