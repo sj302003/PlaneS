@@ -7,11 +7,11 @@
 
 using namespace std;
 
-extern vector<BB> BB_results_k2;
-extern vector<BB> BB_results_k4;
-extern vector<BB> BB_results_k3;
-extern vector<BB> BB_results_k1;
-extern int rank;
+// extern vector<BB> BB_results_k2;
+// extern vector<BB> BB_results_k4;
+// extern vector<BB> BB_results_k3;
+// extern vector<BB> BB_results_k1;
+// extern int rank;
 
 Display::Display() {}
 
