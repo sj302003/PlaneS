@@ -40,11 +40,12 @@ Cnstrelret LinElast(double *stress, double *strain, vector<double> matpar) {
 }
 
 Errret ErrGQ(double *uval, double *phival, double *xcord, double *ycord, int mattype, vector<double> mtpar, double dispscalefac, int order) {
+	Initialize init;
 	GQVandW GQresult;
 	Cnstrelret Cnstreldat;
 	vector<double> values;
 	vector<double> weights;
-	GQresult = getWeightAndValues(order);
+	GQresult = init.getWeightAndValues(order);
 	values = GQresult.value;
 	weights = GQresult.weight;
 	double sts[3];	
@@ -65,7 +66,7 @@ Errret ErrGQ(double *uval, double *phival, double *xcord, double *ycord, int mat
 	}
 	for(int i=0; i<order; i++) {
 		for (int j = 0; j<order; j++) {			
-			BB BBresult = Bsigma_Bd(xcord,ycord,values[i],values[j]);
+			BB BBresult = init.Bsigma_Bd(xcord,ycord,values[i],values[j]);
 			detJ = BBresult.detJ;
 			for (int k = 0; k < 3; k++) {
 				sts[k] = 0;
