@@ -497,7 +497,7 @@ void Initialize::startInitializing()
     vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
-    vector<vector<double>> A
+    vector<vector<double>> A;
 
     int rank = compute_rank(A);
 

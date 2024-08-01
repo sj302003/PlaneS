@@ -175,7 +175,7 @@ const double EPS = 1E-13;
 // 	vector<vector<double>> dfdstress;
 // };
  
- double grad2 = (double) malloc((8*nn+nl) * sizeof(double));
+ double* grad2 = (double*) malloc((8*nn+nl) * sizeof(double));
  double* grad1 = (double*) malloc(Amat_rows * Amat_cols * sizeof(double));
 //  double myfunc(unsigned, const double*, double*, void*);
 //  void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );

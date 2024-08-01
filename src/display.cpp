@@ -41,5 +41,6 @@ void Display::displayResults(const vector<BB>& BB_results_k2, const vector<BB>& 
 }
 
 void Display::startdisplay() {
+    Display display;
     display.displayResults(BB_results_k2, BB_results_k4, BB_results_k3, BB_results_k1, rank);
 }
