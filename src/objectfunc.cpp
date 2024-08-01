@@ -6,10 +6,6 @@
 #include <omp.h>
 
 Cnstrelret LinElast(double *stress, double *strain, vector<double> matpar) {
-	vector<vector<double>> Cmat;
-	vector<vector<double>> Emat;
-	vector<double> delvalue;
-	vector<double> tempmat(3);
 	
 	for (int i = 0; i < 3; i++) {
 		delvalue.push_back(0);
@@ -166,24 +162,10 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	objdata *d = (objdata *)f_data;
 	vector<node> nodecords = d->nodecord;
 	vector<element> ele = d->elemdat;
-  
-	Errret ErrAGrad;
 	int numnodes = d->numnode;
 	int numelem = d->numele;
 	int lenpos = d->lnpos;
 	double dispscalefac = d->dispscalefac;
-	double xcoord[4];
-	double ycoord[4];
-	int u_pos[8];
-	int phi_pos[24];
-	vector<double> gradval;
-	double u_val[8];
-	double phi_val[24];
-	int elenodes[4];
-	int numpar;
-	int GQorder = 10;
-	double errval=0;
-	double ScaleFac = 1e3;
 	if (grad == nullptr){
 		free(grad2);
 		grad2 = (double*) malloc((8*numnodes+lenpos) * sizeof(double));
