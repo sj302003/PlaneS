@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 Initialize::Initialize() {};
 
 GQVandW Initialize::getWeightAndValues(int order) {
@@ -479,8 +478,8 @@ void Initialize::startInitializing()
   order = 6;
 	GQVandW GQdata= getWeightAndValues(order);
 
-    int ele = boundry.ele;
-    double xcoord[4];
+  int ele = boundry.ele;
+  double xcoord[4];
 	xcoord[0] = nodes[elements[ele].node1-1].x_cord;
 	xcoord[1] = nodes[elements[ele].node2-1].x_cord;
 	xcoord[2] = nodes[elements[ele].node3-1].x_cord;
@@ -537,6 +536,4 @@ cout << "BB Results for k=4:" << endl;
     for (const BB& bb : BB_results_k1) {
         cout << "x: " << bb.x << ", y: " << bb.y << endl;
     }
-
-
 }
