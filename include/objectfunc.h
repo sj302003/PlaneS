@@ -8,8 +8,10 @@
 #include <string>
 
 vector<vector<double>> dot(vector<vector<double>> a, vector<vector<double>> b);
-double constraint_eqn(const vector<double> &x, vector<double> &grad, void *data1);
-double objectfunc(const vector<double> &d, vector<double> &grad, void *data1);   
+// double constraint_eqn(const vector<double> &x, vector<double> &grad, void *data1);
+// double objectfunc(const vector<double> &d, vector<double> &grad, void *data1);   
+double myfunc(unsigned, const double*, double*, void*);
+void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 
 
 // class Objectfunc {

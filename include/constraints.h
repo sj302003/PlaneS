@@ -94,9 +94,12 @@ extern vector<vector<double>> Amat, intmat;
 extern int colm;
 extern int row;
 extern int count_dc;
+extern int count_dc;
 extern int thereflg;	
 extern double tempmatpar;
 extern vector<int> rest_dispdof;
+extern int dof, numnode;
+extern double obj_exec_time;
 extern int dof, numnode;
 extern double obj_exec_time;
 extern int order;
@@ -112,11 +115,27 @@ extern int nl;
 extern int numele;
 extern vector<double> Fvector(row);
 extern vector<BB> BB_results_mat(order);
+const double EPS;
 
 extern int ele;
 const double EPS;
 extern double xcoord[4];
 extern double ycoord[4];
+extern Errret ErrAGrad;
+extern	int u_pos[8];
+extern	int phi_pos[24];
+extern	vector<double> gradval;
+extern	double u_val[8];
+extern	double phi_val[24];
+extern	int elenodes[4];
+extern	int numpar;
+extern	int GQorder;
+extern	double errval;
+extern	double ScaleFac;
+extern vector<vector<double>> Cmat;
+extern	vector<vector<double>> Emat;
+extern	vector<double> delvalue;
+extern	vector<double> tempmat(3);
 
 extern BB BBresult;
 struct BB {
@@ -187,6 +206,7 @@ extern void myconstraint(unsigned, double*, unsigned, const double*, double*, vo
 // double myconstraint(unsigned, const double*, double*, void* );
 extern GQVandW result;
 extern GQVandW GQdata;
+extern GQVandW GQdata;
 struct GQVandW {
 	vector<double> value;
 	vector<double> weight;
@@ -198,6 +218,8 @@ extern vector<BB> BB_results_k4;
 extern vector<BB> BB_results_k3;
 extern vector<BB> BB_results_k1;
 
+extern vector<vector<double>> A; 
 
 extern vector<double> knwndisp;
+
 #endif

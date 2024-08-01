@@ -105,12 +105,26 @@ const double EPS = 1E-13;
  int numele = 0;
  vector<double> Fvector(row);
  vector<BB> BB_results_mat(order);
+ const double EPS = 1E-13;
 
  int ele;
  double xcoord[4];
  double ycoord[4];
-
-
+ Errret ErrAGrad;
+	int u_pos[8];
+	int phi_pos[24];
+	vector<double> gradval;
+	double u_val[8];
+	double phi_val[24];
+	int elenodes[4];
+	int numpar;
+	int GQorder = 10;
+	double errval=0;
+	double ScaleFac = 1e3;
+	vector<vector<double>> Cmat;
+	vector<vector<double>> Emat;
+	vector<double> delvalue;
+	vector<double> tempmat(3);
  BB BBresult;
 // struct BB {
 // 	double x = 0;
@@ -185,7 +199,7 @@ int nn = 0;
 int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
  GQVandW result;
- GQVandW GQdata = getWeightAndValues(order);
+ GQVandW GQdata;
 // struct GQVandW {
 // 	vector<double> value;
 // 	vector<double> weight;
@@ -196,9 +210,4 @@ int nl = 0;
  vector<BB> BB_results_k4;
  vector<BB> BB_results_k3;
  vector<BB> BB_results_k1;
-
-
-
-
  vector<double> knwndisp;
-#endif

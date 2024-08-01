@@ -35,3 +35,5 @@
 nlopt-2.7.1/
 output/
 input.txt
+myprogram
+reference.cpp
