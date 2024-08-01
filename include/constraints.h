@@ -85,9 +85,8 @@ extern vector<vector<double>> Bsmat(3, vector<double>(24, 0));
 extern int x;
 extern int y;
 
-extern vector<vector<double>> A;
-extern int n = A.size();
-extern int m = A[0].size();
+extern int n;
+extern int m;
 extern int rank;
 extern vector<bool> row_selected(n, false);
 
