@@ -185,7 +185,7 @@ int nn = 0;
 int nl = 0;
 // double myconstraint(unsigned, const double*, double*, void* );
  GQVandW result;
- GQVandW GQdata = getWeightAndValues(order);
+ GQVandW GQdata;
 // struct GQVandW {
 // 	vector<double> value;
 // 	vector<double> weight;
@@ -201,4 +201,3 @@ int nl = 0;
 
 
  vector<double> knwndisp;
-#endif
