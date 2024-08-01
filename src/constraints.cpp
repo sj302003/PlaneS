@@ -84,8 +84,8 @@ const double EPS = 1E-13;
 
  int x;
  int y;
- int n = A.size();
- int m = A[0].size();
+ int n;
+ int m;
  int rank;
  vector<bool> row_selected(n, false);
 
