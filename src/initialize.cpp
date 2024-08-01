@@ -10,6 +10,7 @@
 
 using namespace std;
 
+
 Initialize::Initialize() {};
 
 GQVandW Initialize::getWeightAndValues(int order) {
@@ -478,8 +479,95 @@ void Initialize::startInitializing()
   order = 6;
 	GQVandW GQdata= getWeightAndValues(order);
 
-  int ele = boundry.ele;
-  double xcoord[4];
+    //int ele = boundry.ele;
+
+    RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
+	cout << "In boundary condition" << endl;
+	RetBC result;
+	double bc_x1, bc_y1, bc_x2, bc_y2;
+	int c1, c2, nd1, nd2;
+	vector<double> values;
+	vector<double> weights;
+	values = GQdat.value;
+	weights = GQdat.weight;
+	
+	nd1 = boundry.node1;
+	nd2 = boundry.node2;
+	bc_x1 = nodes[nd1].x_cord;
+	bc_y1 = nodes[nd1].y_cord;
+	bc_x2 = nodes[nd2].x_cord;
+	bc_y2 = nodes[nd2].y_cord;
+	
+	vector<vector<double> > kmat;
+	vector<double> kmatrow(12);
+	// inti with Zero
+	for (int i = 0; i < 7; i++) {
+		kmat.push_back(kmatrow);
+		for (int j = 0; j < 12; j++)
+			kmat[i][j] = 0;
+	}
+
+	vector<vector<double> > fmat;
+	vector<double>fmatrow(4);
+	//init with zero
+	for (int i = 0; i < 7; i++) {
+		fmat.push_back(fmatrow);
+		for (int j = 0; j < 4; j++)
+			fmat[i][j] = 0;
+	}
+
+	double len, nx, ny, f1, f2, m1, m2, m3, m4, var, value, value2, value3;
+	len = sqrt(pow((bc_x2 - bc_x1), 2) + pow((bc_y2 - bc_y1), 2));
+/*
+	cout<<"nd1: "<<nd1<<'\n';
+	cout<<"nd2: "<<nd2<<'\n';
+	cout<<"bc_x1: "<<bc_x1<<'\n';
+	cout<<"bc_x2: "<<bc_x2<<'\n';
+	
+	cout<<"bc_y1: "<<bc_y1<<'\n';
+	cout<<"bc_y2: "<<bc_y2<<'\n';	
+
+	cout<<"len : "<<len<<'\n';
+*/
+	nx = (bc_y2 - bc_y1) / len;
+	ny = -(bc_x2 - bc_x1) / len;
+
+	if (std::isnan(nx)){
+		cout<<"nx is Nan\n";
+	}
+
+	if (std::isnan(ny)){
+		cout<<"ny is Nan\n";
+	}
+
+	int condition = 0;
+	int ele = boundry.ele;
+
+	if (boundry.node1 == (elements[ele].node1-1) && boundry.node2 == (elements[ele].node2-1)) // t = -1
+	{
+		condition = 1;
+		c1 = 0, c2 = 6;
+	}
+	else if (boundry.node1 == (elements[ele].node2-1) && boundry.node2 == (elements[ele].node3-1)) // s = 1
+	{
+		condition = 2;
+		c1 = 6, c2 = 12;
+	}
+	else if (boundry.node1 == (elements[ele].node3-1) && boundry.node2 == (elements[ele].node4-1)) // t = 1
+	{
+		condition = 3;
+		c1 = 12, c2 = 18;
+	}
+	else if (boundry.node1 == (elements[ele].node4-1) && boundry.node2 == (elements[ele].node1-1)) // s = -1
+	{
+		condition = 4;
+		c1 = 18, c2 = 0;
+	}
+	cout << "condition " << condition << endl;
+
+	vector<BB> BB_results_mat;
+	
+	double xcoord[4];
 	xcoord[0] = nodes[elements[ele].node1-1].x_cord;
 	xcoord[1] = nodes[elements[ele].node2-1].x_cord;
 	xcoord[2] = nodes[elements[ele].node3-1].x_cord;
@@ -490,6 +578,203 @@ void Initialize::startInitializing()
 	ycoord[1] = nodes[elements[ele].node2-1].y_cord;
 	ycoord[2] = nodes[elements[ele].node3-1].y_cord;
 	ycoord[3] = nodes[elements[ele].node4-1].y_cord;
+	
+	BB_results_mat = get_BB_results_mat(condition, order, xcoord, ycoord, values);
+
+	if (condition == 2 || condition == 4) {
+	value = 0.0;
+	value2 = 0.0;
+	value3 = 0.0;
+	for (int i = 0; i < order; i++) {
+		if (condition==2)
+			var = sqrt(pow(BB_results_mat[i].Jmat[0][1], 2) + pow(BB_results_mat[i].Jmat[1][1], 2));
+		else
+		 	var = -sqrt(pow(BB_results_mat[i].Jmat[0][1], 2) + pow(BB_results_mat[i].Jmat[1][1], 2));
+		value += weights[i] * var;
+		value2 += weights[i] * var * BB_results_mat[i].x;
+		value3 += weights[i] * var * BB_results_mat[i].y;
+	}
+	f1 = value; // h1
+	m1 = value2; // x*h1
+	m3 = value3; // y*h1
+	value = 0.0;
+	value2 = 0.0;
+	value3 = 0.0;
+	for (int i = 0; i < order; i++) {
+		if (condition==2)
+			var = sqrt((BB_results_mat[i].x - bc_x1) * (BB_results_mat[i].x - bc_x1) + (BB_results_mat[i].y - bc_y1) * (BB_results_mat[i].y - bc_y1)) * sqrt(pow(BB_results_mat[i].Jmat[0][1], 2) + pow(BB_results_mat[i].Jmat[1][1], 2))/ len;
+		else
+			var = -sqrt((BB_results_mat[i].x - bc_x1) * (BB_results_mat[i].x - bc_x1) + (BB_results_mat[i].y - bc_y1) * (BB_results_mat[i].y - bc_y1)) * sqrt(pow(BB_results_mat[i].Jmat[0][1], 2) + pow(BB_results_mat[i].Jmat[1][1], 2))/ len;
+		value += weights[i] * var;
+		value2 += weights[i] * var * BB_results_mat[i].x;
+		value3 += weights[i] * var * BB_results_mat[i].y;
+	}
+	f2 = value; // h2 
+	m2 = value2;  // x*h2
+	m4 = value3; // y*h2
+	fmat[0][0] = 1;
+	fmat[1][2] = 1;
+	fmat[2][1] = 1;
+	fmat[3][3] = 1;
+
+	}
+	
+	else if (condition == 1 || condition == 3) {
+	value = 0.0;
+	value2 = 0.0;
+	value3 = 0.0;
+	for (int i = 0; i < order; i++) {
+		if (condition==1)
+			var = sqrt(pow(BB_results_mat[i].Jmat[1][0], 2) + pow(BB_results_mat[i].Jmat[0][0], 2));
+		else
+			var = -sqrt(pow(BB_results_mat[i].Jmat[1][0], 2) + pow(BB_results_mat[i].Jmat[0][0], 2));
+		value += weights[i] * var;
+		value2 += weights[i] * var * BB_results_mat[i].x;
+		value3 += weights[i] * var * BB_results_mat[i].y;
+	}
+	f1 = value; // h1
+	m1 = value2; // x*h1
+	m3 = value3; // y*h1
+	value = 0.0;
+	value2 = 0.0;
+	value3 = 0.0;
+	for (int i = 0; i < order; i++) {
+		if (condition==1)
+			var = sqrt((BB_results_mat[i].x - bc_x1) * (BB_results_mat[i].x - bc_x1) + (BB_results_mat[i].y - bc_y1) * (BB_results_mat[i].y - bc_y1)) * sqrt(pow(BB_results_mat[i].Jmat[1][0], 2) + pow(BB_results_mat[i].Jmat[0][0], 2))/ len;
+		else
+			var = -sqrt((BB_results_mat[i].x - bc_x1) * (BB_results_mat[i].x - bc_x1) + (BB_results_mat[i].y - bc_y1) * (BB_results_mat[i].y - bc_y1)) * sqrt(pow(BB_results_mat[i].Jmat[1][0], 2) + pow(BB_results_mat[i].Jmat[0][0], 2))/ len;
+		value += weights[i] * var;
+		value2 += weights[i] * var * BB_results_mat[i].x;
+		value3 += weights[i] * var * BB_results_mat[i].y;
+	}
+	f2 = value; // h2 
+	m2 = value2;  // x*h2
+	m4 = value3; // y*h2
+	fmat[0][1] = 1;
+	fmat[1][3] = 1;
+	fmat[2][0] = 1;
+	fmat[3][2] = 1;
+	}
+
+	fmat[4][0] = f1 - f2;
+	fmat[4][2] = f2;
+	fmat[5][1] = f1 - f2;
+	fmat[5][3] = f2;
+	fmat[6][0] = m4 - m3;
+	fmat[6][1] = m1 - m2;
+	fmat[6][2] = -m4;
+	fmat[6][3] = m2;
+	
+	if (condition == 2 || condition == 4) {
+	kmat[0][4] = nx;
+	kmat[0][5] = -ny;
+	kmat[2][3] = ny;
+	kmat[2][5] = -nx;
+	kmat[1][10] = nx;
+	kmat[1][11] = -ny;
+	kmat[3][9] = ny;
+	kmat[3][11] = -nx;
+	
+	for (int i = 0; i < 6; i++) {
+		value = 0;
+		value2 = 0;
+		value3 = 0;
+		for (int j = 0; j < order; j++)
+		{
+			if (condition==2)
+				var = sqrt(pow(BB_results_mat[j].Jmat[0][1], 2) + pow(BB_results_mat[j].Jmat[1][1], 2));
+			else
+				var = -sqrt(pow(BB_results_mat[j].Jmat[0][1], 2) + pow(BB_results_mat[j].Jmat[1][1], 2));
+			value += weights[j] * (BB_results_mat[j].Bsmat[0][i + c1] * nx + BB_results_mat[j].Bsmat[2][i + c1] * ny) * var;
+			value2 += weights[j] * (BB_results_mat[j].Bsmat[2][i + c1] * nx + BB_results_mat[j].Bsmat[1][i + c1] * ny) * var;
+			value3 += weights[j] * (BB_results_mat[j].x * BB_results_mat[j].Bsmat[1][i + c1] * ny - BB_results_mat[j].y * BB_results_mat[j].Bsmat[0][i + c1] * nx + BB_results_mat[j].Bsmat[2][i + c1] * (BB_results_mat[j].x * nx - BB_results_mat[j].y * ny)) * var;
+		}
+		kmat[4][i] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
+		kmat[5][i] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
+		kmat[6][i] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		value = 0;
+		value2 = 0;
+		value3 = 0;
+		for (int j = 0; j < order; j++)
+		{
+			if (condition==2)
+				var = sqrt(pow(BB_results_mat[j].Jmat[0][1], 2) + pow(BB_results_mat[j].Jmat[1][1], 2));
+			else
+				var = -sqrt(pow(BB_results_mat[j].Jmat[0][1], 2) + pow(BB_results_mat[j].Jmat[1][1], 2));
+			value += weights[j] * (BB_results_mat[j].Bsmat[0][i + c2] * nx + BB_results_mat[j].Bsmat[2][i + c2] * ny) * var;
+			value2 += weights[j] * (BB_results_mat[j].Bsmat[2][i + c2] * nx + BB_results_mat[j].Bsmat[1][i + c2] * ny) * var;
+			value3 += weights[j] * (BB_results_mat[j].x * BB_results_mat[j].Bsmat[1][i + c2] * ny - BB_results_mat[j].y * BB_results_mat[j].Bsmat[0][i + c2] * nx + BB_results_mat[j].Bsmat[2][i + c2] * (BB_results_mat[j].x * nx - BB_results_mat[j].y * ny)) * var;
+		}
+		kmat[4][i + 6] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
+		kmat[5][i + 6] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
+		kmat[6][i + 6] = value3;	//(x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+	}
+	}
+
+	else if (condition == 1 || condition == 3) {
+	kmat[0][5] = -nx;
+	kmat[0][3] = ny;
+	kmat[2][5] = -ny;
+	kmat[2][4] = nx;
+	kmat[1][11] = -nx;
+	kmat[1][9] = ny;
+	kmat[3][11] = -ny;
+	kmat[3][10] = nx;
+
+		
+		for (int i = 0; i < 6; i++) {
+		value = 0;
+		value2 = 0;
+		value3 = 0;
+		for (int j = 0; j < order; j++)
+		{
+			if (condition==1)
+				var = sqrt(pow(BB_results_mat[j].Jmat[1][0], 2) + pow(BB_results_mat[j].Jmat[0][0], 2));
+			else
+				var = -sqrt(pow(BB_results_mat[j].Jmat[1][0], 2) + pow(BB_results_mat[j].Jmat[0][0], 2));
+			value += weights[j] * (BB_results_mat[j].Bsmat[0][i + c1] * nx + BB_results_mat[j].Bsmat[2][i + c1] * ny) * var;
+			value2 += weights[j] * (BB_results_mat[j].Bsmat[2][i + c1] * nx + BB_results_mat[j].Bsmat[1][i + c1] * ny) * var;
+			value3 += weights[j] * (BB_results_mat[j].x * BB_results_mat[j].Bsmat[1][i + c1] * ny - BB_results_mat[j].y * BB_results_mat[j].Bsmat[0][i + c1] * nx + BB_results_mat[j].Bsmat[2][i + c1] * (BB_results_mat[j].x * nx - BB_results_mat[j].y * ny)) * var;
+		}
+		kmat[4][i] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
+		kmat[5][i] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
+		kmat[6][i] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		value = 0;
+		value2 = 0;
+		value3 = 0;
+		for (int j = 0; j < order; j++)
+		{
+			if (condition==1)
+				var = sqrt(pow(BB_results_mat[j].Jmat[1][0], 2) + pow(BB_results_mat[j].Jmat[0][0], 2));
+			else
+				var = -sqrt(pow(BB_results_mat[j].Jmat[1][0], 2) + pow(BB_results_mat[j].Jmat[0][0], 2));
+			value += weights[j] * (BB_results_mat[j].Bsmat[0][i + c2] * nx + BB_results_mat[j].Bsmat[2][i + c2] * ny) * var;
+			value2 += weights[j] * (BB_results_mat[j].Bsmat[2][i + c2] * nx + BB_results_mat[j].Bsmat[1][i + c2] * ny) * var;
+			value3 += weights[j] * (BB_results_mat[j].x * BB_results_mat[j].Bsmat[1][i + c2] * ny - BB_results_mat[j].y * BB_results_mat[j].Bsmat[0][i + c2] * nx + BB_results_mat[j].Bsmat[2][i + c2] * (BB_results_mat[j].x * nx - BB_results_mat[j].y * ny)) * var;
+		}
+		kmat[4][i + 6] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
+		kmat[5][i + 6] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
+		kmat[6][i + 6] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+	}
+	}
+	for (int a=0; a<7; a++) {
+		for (int b=0; b<12; b++) {
+			if (kmat[a][b] <= TOL && kmat[a][b] >= -TOL)
+				kmat[a][b] = 0;
+		}
+	}
+	for (int a=0; a<7; a++) {
+		for (int b=0; b<4; b++) {
+			if (fmat[a][b] <= TOL && fmat[a][b] >= -TOL)
+				fmat[a][b] = 0;
+		}
+	}
+	cout<<"Finished Kmat and Fmat"<<endl;
+	result.Fmat = fmat;
+	result.Kmat = kmat;
+	return result;
+}
+
 	
     vector<BB> BB_results_mat;
     vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
@@ -536,4 +821,6 @@ cout << "BB Results for k=4:" << endl;
     for (const BB& bb : BB_results_k1) {
         cout << "x: " << bb.x << ", y: " << bb.y << endl;
     }
+
+
 }

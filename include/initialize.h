@@ -19,6 +19,7 @@ public:
 
 private:
     std::string filename;
+    RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order);
 };
 
 #endif // READ_H
