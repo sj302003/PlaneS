@@ -197,8 +197,8 @@ void Read::boundary_condition_reader(vector<Oceane::Nodeptr>& x, string name)
 void Read::startreading()
 {
     Read reader1;
-    reader1.node_reader(m_nodes,"../PlaneStress/files/nodecoord.txt");
-    reader1.element_reader(funcname, m_elements, parameters, m_nodes, "../PlaneStress/files/nodecon.txt");
-    reader1.boundary_condition_reader(m_boundaryElements,"../PlaneStress/files/boundcond_UE.txt");
+    reader1.node_reader(m_nodes,"../PlaneS/files/nodecoord.txt");
+    reader1.element_reader(funcname, m_elements, parameters, m_nodes, "../PlaneS/files/nodecon.txt");
+    reader1.boundary_condition_reader(m_boundaryElements,"../PlaneS/files/boundcond_UE.txt");
     
 }
