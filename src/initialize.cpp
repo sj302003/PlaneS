@@ -445,22 +445,18 @@ bool Initialize::cmp_for_desc(int x, int y){
 
 
 int Initialize::compute_rank(vector<vector<double>> A) {
-	cout<<"Chk1"<<endl;
     int n = A.size();
 	if (n == 0) {
         // If the matrix is empty, its rank is 0
         return 0;
     }
-	cout<<"Chk2"<<endl;
     int m = A[0].size();
 	if (m == 0) {
         // If the matrix has no columns, its rank is 0
         return 0;
     }
-	cout<<"Chk3"<<endl;
 
     int rank = 0;
-	cout<<"Chk4"<<endl;
     vector<bool> row_selected(n, false);
     for (int i = 0; i < m; ++i) {
         int j;
@@ -482,8 +478,7 @@ int Initialize::compute_rank(vector<vector<double>> A) {
                 }
             }
         }
-    }
-    cout<<"Chk5"<<endl;     
+    }    
     return rank;
 }
 
@@ -784,11 +779,8 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 
 void Initialize::startInitializing()
 {
-	cout<<"Check 1"<<endl;
   order = 6;
-	cout<<"Check 2"<<endl;
 	GQVandW GQdata= getWeightAndValues(order);
-	cout<<"Check 3"<<endl;
     //int ele = boundry.ele;
 
     vector<BB> BB_results_mat;
@@ -797,10 +789,8 @@ void Initialize::startInitializing()
     vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
     //vector<vector<double>> A;
-	cout<<"Check 4"<<endl;
 
     int rank = compute_rank(A);
-		cout<<"Check 5"<<endl;
 
     // Output results for verification
     cout << "Order: " << order << endl;

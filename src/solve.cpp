@@ -16,7 +16,7 @@ void Solve::Solver() {
         d.insert(d.end(), vec.begin(), vec.end());
     }
 
-    nlopt::opt opt(nlopt::LD_SLSQP, d.size());
+    // nlopt::opt opt(nlopt::LD_SLSQP, d.size());
 
     Amat_rows = Amat.size();
     Amat_cols = Amat[0].size();
@@ -30,7 +30,7 @@ void Solve::Solver() {
 
     nn = numnode;
     nl = count_dc;
-
+    
     const unsigned n = 8 * numnode + count_dc;
 
     std::vector<std::vector<double>> intmat(n, std::vector<double>(n, 0));
@@ -44,39 +44,57 @@ void Solve::Solver() {
 
     constraint_data.Amat = Amat;
     constraint_data.Fvec = Fvector;
-
+    constraint_data.rows = row;
+	constraint_data.intmat = intmat;
     const double toler = 1e-14;
     unsigned m = row;
-    std::vector<double> tol(m, toler);
 
     //nlopt::opt opt(nlopt::LD_SLSQP, n);
-    opt.set_min_objective(myfunc, &obj_data);
-    opt.add_equality_mconstraint(myconstraint, &constraint_data, tol);
-    opt.set_xtol_rel(toler);
-    opt.set_ftol_rel(toler);
-    opt.set_ftol_abs(toler / 10000);
+    double *tol = new double[m];
+	for(int i=0;i<m;i++){
+		tol[i] = toler;
+	}
+	nlopt_opt opt;
+	opt = nlopt_create(NLOPT_LD_SLSQP, n);
+	nlopt_set_min_objective(opt, myfunc, &obj_data);
+    cout<<"Check Solve 1"<<endl;
+	nlopt_add_equality_mconstraint(opt, m, myconstraint, &constraint_data, tol);
+    cout<<"Check Solve 2"<<endl;
+	nlopt_set_xtol_rel(opt, toler);
+    cout<<"Check Solve 3"<<endl;
+	nlopt_set_ftol_rel(opt, toler);
+    cout<<"Check Solve 4"<<endl;
+	nlopt_set_ftol_abs(opt, toler/10000);
+    cout<<"Check Solve 5"<<endl;
 
-    std::vector<double> x(n, 0);
-    for (unsigned i = 2 * numnode; i < (8 * numnode + count_dc); ++i) {
-        x[i] = 20;
-    }
+    double x[n];
+	for (int i=0; i<2*numnode; i++){
+		x[i] = 0;
+	}
+	for(int i=2*numnode; i<(8*numnode+count_dc); i++){
+		x[i] = 20;
+	}	
+	double minf;
+	double *xreq;
+	xreq = x;
+	double start = omp_get_wtime();
+	int answer= nlopt_optimize(opt, xreq, &minf);
+	double end = omp_get_wtime();
 
-    double minf;
-    double start = omp_get_wtime();
-    int answer = opt.optimize(x, minf);
-    double end = omp_get_wtime();
-
-    std::cout << "Time taken: " << end - start << std::endl;
-    if (answer < 0) {
-        std::cout << "Optimization did not converge. Exit code: " << answer << std::endl;
-    } else {
-        std::cout << "Optimization converged\nminf = " << minf << "\nexit flag = " << answer << std::endl;
-    }
-
-    ofstream outoptfile;
-    outoptfile.open("With_Temp_Matrix_6.csv");
-    for (const auto& xi : x) {
-        outoptfile << xi << std::endl;
-    }
-    outoptfile.close();
+	cout << "Time taken : " << end - start << endl;
+	if (answer<0){
+		cout<<"Optimization did not converge. Exit code: "<<answer<<endl;
+	}
+	else {
+		cout<<"Optimization converged"<<endl<<"minf = "<<minf<<"exit flag = " << answer<<endl;
+	}
+	cout << "Overall time taken by objective function : " << obj_exec_time << endl; 
+	ofstream outoptfile;
+	outoptfile.open("With_Temp_Matrix_6.csv");
+	for (int i=0; i<(8*numnode+count_dc); i++){
+		outoptfile<< x[i]<< endl;
+	}
+	outoptfile.close();
+	nlopt_destroy(opt);
+    
 }
