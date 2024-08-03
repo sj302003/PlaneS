@@ -445,10 +445,22 @@ bool Initialize::cmp_for_desc(int x, int y){
 
 
 int Initialize::compute_rank(vector<vector<double>> A) {
+	cout<<"Chk1"<<endl;
     int n = A.size();
+	if (n == 0) {
+        // If the matrix is empty, its rank is 0
+        return 0;
+    }
+	cout<<"Chk2"<<endl;
     int m = A[0].size();
+	if (m == 0) {
+        // If the matrix has no columns, its rank is 0
+        return 0;
+    }
+	cout<<"Chk3"<<endl;
 
     int rank = 0;
+	cout<<"Chk4"<<endl;
     vector<bool> row_selected(n, false);
     for (int i = 0; i < m; ++i) {
         int j;
@@ -471,6 +483,7 @@ int Initialize::compute_rank(vector<vector<double>> A) {
             }
         }
     }
+    cout<<"Chk5"<<endl;     
     return rank;
 }
 
@@ -684,7 +697,7 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 		}
 		kmat[4][i] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
 		kmat[5][i] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
-		kmat[6][i] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		kmat[6][i] = value3;	// (x*Bsmat[1][i]ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i](x*nx - y*ny)*h1)
 		value = 0;
 		value2 = 0;
 		value3 = 0;
@@ -700,7 +713,7 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 		}
 		kmat[4][i + 6] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
 		kmat[5][i + 6] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
-		kmat[6][i + 6] = value3;	//(x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		kmat[6][i + 6] = value3;	//(x*Bsmat[1][i]ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i](x*nx - y*ny)*h1)
 	}
 	}
 
@@ -731,7 +744,7 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 		}
 		kmat[4][i] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
 		kmat[5][i] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
-		kmat[6][i] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		kmat[6][i] = value3;	// (x*Bsmat[1][i]ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i](x*nx - y*ny)*h1)
 		value = 0;
 		value2 = 0;
 		value3 = 0;
@@ -747,7 +760,7 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 		}
 		kmat[4][i + 6] = value; // (Bsmat[0][i]*nx*h1) + (Bsmat[2][i]*ny*h1))
 		kmat[5][i + 6] = value2; // (Bsmat[2][i]*nx*h1) + (Bsmat[1][i]*ny*h1))
-		kmat[6][i + 6] = value3;	// (x*Bsmat[1][i]*ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i]*(x*nx - y*ny)*h1)
+		kmat[6][i + 6] = value3;	// (x*Bsmat[1][i]ny*h1) - (y*Bsmat[0][i]*nx*h1) + Bsmat[2][i](x*nx - y*ny)*h1)
 	}
 	}
 	for (int a=0; a<7; a++) {
@@ -783,7 +796,7 @@ void Initialize::startInitializing()
     vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
-    vector<vector<double>> A;
+    //vector<vector<double>> A;
 	cout<<"Check 4"<<endl;
 
     int rank = compute_rank(A);
