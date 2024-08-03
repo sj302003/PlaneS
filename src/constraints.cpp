@@ -50,8 +50,8 @@
 
 /////
  int k;
- double *xcoord; 
- double *ycoord; 
+//  double *xcoord; 
+//  double *ycoord; 
  double s; 
  double t;
  double matX = 0;
@@ -97,8 +97,8 @@ const double EPS = 1E-13;
  //const double EPS = 1E-13;
 
  int ele;
-//  double xcoord[4];
-//  double ycoord[4];
+ double xcoord[4];
+ double ycoord[4];
  Errret ErrAGrad;
 	int u_pos[8];
 	int phi_pos[24];

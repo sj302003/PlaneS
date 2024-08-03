@@ -771,9 +771,11 @@ RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 
 void Initialize::startInitializing()
 {
+	cout<<"Check 1"<<endl;
   order = 6;
+	cout<<"Check 2"<<endl;
 	GQVandW GQdata= getWeightAndValues(order);
-
+	cout<<"Check 3"<<endl;
     //int ele = boundry.ele;
 
     vector<BB> BB_results_mat;
@@ -782,9 +784,10 @@ void Initialize::startInitializing()
     vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
     vector<vector<double>> A;
-
+	cout<<"Check 4"<<endl;
 
     int rank = compute_rank(A);
+		cout<<"Check 5"<<endl;
 
     // Output results for verification
     cout << "Order: " << order << endl;

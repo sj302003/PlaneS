@@ -56,8 +56,8 @@ struct ObjectiveData {
 
 /////
 extern int k;
-extern double *xcoord; 
-extern double *ycoord; 
+// extern double *xcoord; 
+// extern double *ycoord; 
 extern double s; 
 extern double t;
 // extern vector<double> Nis(4);
@@ -119,8 +119,8 @@ extern const double EPS;
 
 extern int ele;
 // const double EPS;
-// extern double xcoord[4];
-// extern double ycoord[4];
+extern double xcoord[4];
+extern double ycoord[4];
 // extern Errret ErrAGrad;
 extern	int u_pos[8];
 extern	int phi_pos[24];

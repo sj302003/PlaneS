@@ -191,7 +191,7 @@ void Read::boundary_condition_reader(vector<Oceane::Nodeptr>& x, string name)
 	}
 	cout << endl;
 	cout <<"Finished reading boundary conditions"<<endl;  
-  std::cout<<"count_dc: "<<count_dc<<'\n';  
+  //cout<<"count_dc: "<<count_dc<<endl;  
 }
 
 void Read::startreading()
