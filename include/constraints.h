@@ -56,8 +56,8 @@ struct ObjectiveData {
 
 /////
 extern int k;
-// extern double *xcoord; 
-// extern double *ycoord; 
+extern double *xcoord; 
+extern double *ycoord; 
 extern double s; 
 extern double t;
 // extern vector<double> Nis(4);
@@ -87,7 +87,7 @@ extern int y;
 
 extern int n;
 extern int m;
-extern int rank;
+extern int rankk;
 // extern vector<bool> row_selected(n, false);
 
 extern vector<vector<double>> Amat, intmat;
@@ -115,19 +115,19 @@ extern int nl;
 extern int numele;
 extern vector<double> Fvector;
 // extern vector<BB> BB_results_mat;
-const double EPS=1E-13;
+extern const double EPS;
 
 extern int ele;
 // const double EPS;
-extern double xcoord;
-extern double ycoord;
+// extern double xcoord[4];
+// extern double ycoord[4];
 // extern Errret ErrAGrad;
-extern	int u_pos;
-extern	int phi_pos;
+extern	int u_pos[8];
+extern	int phi_pos[24];
 extern	vector<double> gradval;
-extern	double u_val;
-extern	double phi_val;
-extern	int elenodes;
+extern	double u_val[8];
+extern	double phi_val[24];
+extern	int elenodes[4];
 extern	int numpar;
 extern	int GQorder;
 extern	double errval;

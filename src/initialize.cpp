@@ -474,7 +474,7 @@ int Initialize::compute_rank(vector<vector<double>> A) {
     return rank;
 }
 
-RetBC Intialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
+RetBC Initialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 	cout << "In boundary condition" << endl;
 	RetBC result;
 	double bc_x1, bc_y1, bc_x2, bc_y2;
