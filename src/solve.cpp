@@ -1,4 +1,5 @@
 #include "solve.h"
+#include "constraints.h"
 #include "objectfunc.h"
 #include <nlopt.hpp>
 #include <iostream>

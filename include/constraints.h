@@ -166,6 +166,8 @@ typedef struct boundry_condition {
 	double dispvec[4];
 }bc;
 
+extern int bndsdes;
+
 struct element {
 	int node1, node2, node3, node4, ele, mattype, nummatpar;
 	vector<double> matpar;

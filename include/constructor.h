@@ -2,6 +2,7 @@
 #define CONSTRUCTOR_H
 
 #include "constraints.h"
+#include "initialize.h"
 
 #include <vector>
 #include <string>

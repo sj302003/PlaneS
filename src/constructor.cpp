@@ -1,5 +1,6 @@
 #include "constructor.h"
 #include "constraints.h"
+#include "initialize.h" // Ensure this line is present
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -10,67 +11,6 @@
 #include <nlopt.h>
 
 Constructor::Constructor() {};
-
-pair<vector<double>, vector<vector<double>>> Constructor::model(vector<double> K1, vector<double> K2, vector<double> matpar) {
-    vector<double> beta;
-    vector<vector<double>> dbeta(3, vector<double>(3, 0.0));
-    beta.push_back(matpar[0] * K1[0]);
-    beta.push_back(matpar[1] * pow(K2[0], matpar[2]) + matpar[3]);
-    beta.push_back(0);
-
-    dbeta[0][0] = matpar[0];
-    dbeta[1][1] = matpar[1] * pow(K2[0], matpar[2] - 1) * matpar[2];
-    pair<vector<double>, vector<vector<double>>> result;
-    result.first = beta;
-    result.second = dbeta;
-
-    return result;
-}
-
-pair<vector<vector<double>>, vector<vector<double>>> Constructor::Constitutrel(vector<vector<double>>& L, vector<vector<double>>& A, vector<vector<string>>& funcname, vector<vector<double>>& parameters, int nmemb, vector<vector<double>>& forcememb) {
-    vector<vector<double>> fdiff, strain, delta;
-    for (int i = 0; i < nmemb; i++) {
-        vector<double> temp;
-        temp.push_back(0);
-        fdiff.push_back(temp);
-        strain.push_back(temp);
-        delta.push_back(temp);
-    }
-
-    for (int i = 0; i < nmemb; i++) {
-        pair<vector<double>, vector<vector<double>>> abcd;
-        vector<double> sigma;
-        for (int j = 0; j < forcememb[0].size(); j++) {
-            sigma.push_back(forcememb[i][j] / A[i][j]);
-        }
-        vector<double> K1, K2;
-        for (int j = 0; j < sigma.size(); j++) {
-            K1.push_back(sigma[j]);
-            K2.push_back(sigma[j] * sigma[j]);
-        }
-        string namestr = funcname[i][0];
-
-        if (namestr == "model") {
-            vector<double> temp;
-            for (int j = 1; j < parameters[0].size(); j++) {
-                temp.push_back(parameters[i][j]);
-            }
-            Constructor con1;
-            abcd = con1.model(K1, K2, temp);
-        }
-        vector<double> beta = abcd.first;
-        vector<vector<double>> dbeta = abcd.second;
-
-        strain[i][0] = beta[0] + beta[1] * K1[0] + beta[2] * K2[0];
-        delta[i][0] = strain[i][0] * L[i][0];
-        fdiff[i][0] = (dbeta[0][0] + dbeta[0][1] * 2 * K1[0] + dbeta[1][0] * K1[0] + dbeta[1][1] * 2 * K2[0] + beta[1] + dbeta[2][0] * K2[0] + dbeta[2][1] * 2 * K1[0] * K2[0] + 2 * beta[2] * K1[0]) * L[i][0] / A[i][0];
-    }
-    pair<vector<vector<double>>, vector<vector<double>>> v;
-    v.first = delta;
-    v.second = fdiff;
-
-    return v;
-}
 
 void Constructor::assembleAmat() {
     std::cout << "numnode: " << numnode << " count_dc: " << count_dc << '\n';
@@ -96,13 +36,14 @@ void Constructor::assembleAmat() {
     vector<vector<double>> tempFmat;
     vector<vector<double>> temptransmat;
     std::cout << "Going to assemble Amat" << std::endl;
+    Initialize init; // Create an instance of Initialize
     for (int ab = 0; ab < bndsdes; ab++) {
         vector<int> colindx_sts;
         vector<int> colindx_disp;
         vector<int> colindx_trct;
         vector<int> ddof;
         bc temp = bc_arr[ab];
-        RetBC res = boundry_condition_fun(temp, GQdata, order);
+        RetBC res = init.boundry_condition_fun(temp, GQdata, order); // Use the instance to call the function
         tempkmat = res.Kmat;
         tempFmat = res.Fmat;
 
@@ -286,7 +227,7 @@ void Constructor::assembleAmat() {
 
                     std::copy_if(reqvec.begin(), reqvec.end(), std::back_inserter(req_n), [&](int) { return *bseind_it1++; });
                     std::copy_if(bsevec.begin(), bsevec.end(), std::back_inserter(req_d), [&](int) { return *bseind_it2++; });
-                    std::transform(req_n.begin(), req_d.begin(), std::back_inserter(reqrat), std::divides<double>());
+                    std::transform(req_n.begin(), req_n.end(), req_d.begin(), std::back_inserter(reqrat), std::divides<double>());
 
                     sum = std::accumulate(reqrat.begin(), reqrat.end(), 0.0);
 
@@ -315,7 +256,7 @@ void Constructor::assembleAmat() {
         }
     }
 
-    std::cout << "Rank before removing rows: " << compute_rank(Amat) << '\n';
+    std::cout << "Rank before removing rows: " << init.compute_rank(Amat) << '\n'; // Use the instance to call the function
 
     std::cout << "counter1 " << counter1 << '\n';
     std::cout << "counter2 " << counter2 << '\n';
@@ -345,12 +286,12 @@ void Constructor::assembleAmat() {
     std::cout << "Amat.size : " << Amat.size() << std::endl;
     std::cout << "Amat[0].size : " << Amat[0].size() << std::endl;
     row = Amat.size();
-    std::cout << "Rank after removing rows: " << compute_rank(Amat) << '\n';
+    std::cout << "Rank after removing rows: " << init.compute_rank(Amat) << '\n'; // Use the instance to call the function
 
-    if ((Amat.size() - compute_rank(Amat)) > 0) {
+    if ((Amat.size() - init.compute_rank(Amat)) > 0) { // Use the instance to call the function
         std::cout << "Inconsistent boundary condition" << std::endl;
         std::cout << "Amat.size : " << Amat.size() << std::endl;
-        std::cout << "compute_rank(Amat) : " << compute_rank(Amat) << std::endl;
+        std::cout << "compute_rank(Amat) : " << init.compute_rank(Amat) << std::endl; // Use the instance to call the function
     }
 
     ofstream outfile_A;

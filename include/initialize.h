@@ -14,12 +14,13 @@ public:
     vector<BB> get_BB_results_mat(int k, int order, double *xcoord, double *ycoord, vector<double> values);
     bool cmp_for_desc(int x, int y);
     int compute_rank(vector<vector<double>> A);
-
+    RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order);
     void startInitializing();
+    
 
 private:
     std::string filename;
-    RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order);
+    //RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order);
 };
 
-#endif // READ_H
+#endif 

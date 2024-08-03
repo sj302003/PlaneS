@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11
+CFLAGS = -std=c++11 -fopenmp
 
 SRC_DIR = src
 INCLUDE_DIR = include

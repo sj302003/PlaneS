@@ -141,6 +141,8 @@ const double EPS = 1E-13;
 // 	double dispvec[4];
 // }bc;
 
+int bndsdes;
+
 // struct element {
 // 	int node1, node2, node3, node4, ele, mattype, nummatpar;
 // 	vector<double> matpar;
