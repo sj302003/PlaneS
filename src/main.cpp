@@ -11,6 +11,8 @@ int main()
     reader.startreading();
     Initialize init;
     init.startInitializing();
+    Constructor constructor;
+    constructor.assembleAmat();
     Solve solver1;
     solver1.Solver();
     Display display;

@@ -48,7 +48,7 @@ void Solve::Solver() {
     unsigned m = row;
     std::vector<double> tol(m, toler);
 
-    nlopt::opt opt(nlopt::LD_SLSQP, n);
+    //nlopt::opt opt(nlopt::LD_SLSQP, n);
     opt.set_min_objective(myfunc, &obj_data);
     opt.add_equality_mconstraint(myconstraint, &constraint_data, tol);
     opt.set_xtol_rel(toler);

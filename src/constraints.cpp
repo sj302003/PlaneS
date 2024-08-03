@@ -54,9 +54,6 @@
  double *ycoord; 
  double s; 
  double t;
- vector<double> Nis(4);
- vector<double> Nit(4);
- vector<double> N(4);
  double matX = 0;
  double matY = 0;
 
@@ -67,27 +64,19 @@ const double EPS = 1E-13;
 
 
  vector<vector<double>> Jmat;
- vector<double> Jmatrow(2);
- vector<vector<double>> invJ(2, vector<double>(2, 0));
  double detJ;
  vector<vector<double>> Bd;
- vector<double> Bdrow(8);
  vector<vector<double>> Bs;
- vector<double> Bsrow(24);
  vector<vector<double>> Tmat;
- vector<double> Tmatrow(24);
  vector<vector<double>> T1mat;
- vector<double> T1matrow(6);
- vector<vector<double>> Dmat(3, vector<double>(3, 0));
- vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
- vector<vector<double>> Bsmat(3, vector<double>(24, 0));
+ 
+ vector<vector<double>> Bsmat;
 
  int x;
  int y;
  int n;
  int m;
  int rank;
- vector<bool> row_selected(n, false);
 
  vector<vector<double>> Amat, intmat;
  int colm;

@@ -56,31 +56,31 @@ struct ObjectiveData {
 
 /////
 extern int k;
-extern double *xcoord; 
-extern double *ycoord; 
+// extern double *xcoord; 
+// extern double *ycoord; 
 extern double s; 
 extern double t;
-extern vector<double> Nis(4);
-extern vector<double> Nit(4);
-extern vector<double> N(4);
+// extern vector<double> Nis(4);
+// extern vector<double> Nit(4);
+// extern vector<double> N(4);
 extern double matX ;
 extern double matY ;
 
 extern vector<vector<double>> Jmat;
-extern vector<double> Jmatrow(2);
-extern vector<vector<double>> invJ(2, vector<double>(2, 0));
+// extern vector<double> Jmatrow(2);
+// extern vector<vector<double>> invJ(2, vector<double>(2, 0));
 extern double detJ;
 extern vector<vector<double>> Bd;
-extern vector<double> Bdrow(8);
+// extern vector<double> Bdrow(8);
 extern vector<vector<double>> Bs;
-extern vector<double> Bsrow(24);
+// extern vector<double> Bsrow(24);
 extern vector<vector<double>> Tmat;
-extern vector<double> Tmatrow(24);
+// extern vector<double> Tmatrow(24);
 extern vector<vector<double>> T1mat;
-extern vector<double> T1matrow(6);
-extern vector<vector<double>> Dmat(3, vector<double>(3, 0));
-extern vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
-extern vector<vector<double>> Bsmat(3, vector<double>(24, 0));
+// extern vector<double> T1matrow(6);
+// extern vector<vector<double>> Dmat(3, vector<double>(3, 0));
+// extern vector<vector<double>> Bs1mat(3, vector<double>(24, 0));
+extern vector<vector<double>> Bsmat;
 
 extern int x;
 extern int y;
@@ -88,7 +88,7 @@ extern int y;
 extern int n;
 extern int m;
 extern int rank;
-extern vector<bool> row_selected(n, false);
+// extern vector<bool> row_selected(n, false);
 
 extern vector<vector<double>> Amat, intmat;
 extern int colm;
@@ -113,21 +113,21 @@ extern int Amat_cols;
 extern int nn;
 extern int nl;
 extern int numele;
-extern vector<double> Fvector(row);
-extern vector<BB> BB_results_mat(order);
-const double EPS;
+extern vector<double> Fvector;
+// extern vector<BB> BB_results_mat;
+const double EPS=1E-13;
 
 extern int ele;
-const double EPS;
-extern double xcoord[4];
-extern double ycoord[4];
-extern Errret ErrAGrad;
-extern	int u_pos[8];
-extern	int phi_pos[24];
+// const double EPS;
+extern double xcoord;
+extern double ycoord;
+// extern Errret ErrAGrad;
+extern	int u_pos;
+extern	int phi_pos;
 extern	vector<double> gradval;
-extern	double u_val[8];
-extern	double phi_val[24];
-extern	int elenodes[4];
+extern	double u_val;
+extern	double phi_val;
+extern	int elenodes;
 extern	int numpar;
 extern	int GQorder;
 extern	double errval;
@@ -135,9 +135,9 @@ extern	double ScaleFac;
 extern vector<vector<double>> Cmat;
 extern	vector<vector<double>> Emat;
 extern	vector<double> delvalue;
-extern	vector<double> tempmat(3);
+extern	vector<double> tempmat;
 
-extern BB BBresult;
+
 struct BB {
 	double x;
 	double y;
@@ -146,6 +146,8 @@ struct BB {
 	vector<vector<double> > Bd;
 	vector<vector<double> > Bsmat;
 };
+extern BB BBresult;
+extern vector<BB> BB_results_mat;
 
 struct RetBC {
 	vector<vector<double>> Kmat;
@@ -194,6 +196,7 @@ struct Errret {
 	double errv;
 	vector<double> grdval;
 };
+extern Errret ErrAGrad;
 
 struct Cnstrelret {
 	vector<double> delval;
@@ -204,15 +207,15 @@ struct Cnstrelret {
 extern double myfunc(unsigned, const double*, double*, void*);
 extern void myconstraint(unsigned, double*, unsigned, const double*, double*, void* );
 // double myconstraint(unsigned, const double*, double*, void* );
-extern GQVandW result;
-extern GQVandW GQdata;
-extern GQVandW GQdata;
 struct GQVandW {
 	vector<double> value;
 	vector<double> weight;
 };
+extern GQVandW result;
+extern GQVandW GQdata;
+extern GQVandW GQdata;
 
-extern vector<BB> BB_results_mat;
+//extern vector<BB> BB_results_mat;
 extern vector<BB> BB_results_k2;
 extern vector<BB> BB_results_k4;
 extern vector<BB> BB_results_k3;

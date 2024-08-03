@@ -474,14 +474,7 @@ int Initialize::compute_rank(vector<vector<double>> A) {
     return rank;
 }
 
-void Initialize::startInitializing()
-{
-  order = 6;
-	GQVandW GQdata= getWeightAndValues(order);
-
-    //int ele = boundry.ele;
-
-    RetBC boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
+RetBC Intialize::boundry_condition_fun(bc boundry, GQVandW GQdat, int order) {
 	cout << "In boundary condition" << endl;
 	RetBC result;
 	double bc_x1, bc_y1, bc_x2, bc_y2;
@@ -775,13 +768,21 @@ void Initialize::startInitializing()
 	return result;
 }
 
-	
+
+void Initialize::startInitializing()
+{
+  order = 6;
+	GQVandW GQdata= getWeightAndValues(order);
+
+    //int ele = boundry.ele;
+
     vector<BB> BB_results_mat;
     vector<BB> BB_results_k2 = get_BB_results_mat(2, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k4 = get_BB_results_mat(4, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k3 = get_BB_results_mat(3, order, xcoord, ycoord, GQdata.value);
     vector<BB> BB_results_k1 = get_BB_results_mat(1, order, xcoord, ycoord, GQdata.value);
     vector<vector<double>> A;
+
 
     int rank = compute_rank(A);
 
