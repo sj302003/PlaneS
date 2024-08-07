@@ -48,7 +48,7 @@ void Read::element_reader(vector<vector<string>> &x, vector<Oceane::Elementptr> 
 		return;
 	}
 
-	int numele = 0;
+	numele = 0;
 	while (!infile_ele.eof())
 	{
 		element tempe;

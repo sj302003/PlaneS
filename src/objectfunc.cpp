@@ -165,6 +165,19 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	int numelem = d->numele;
 	int lenpos = d->lnpos;
 	double dispscalefac = d->dispscalefac;
+	Errret ErrAGrad;
+	// double xcoord[4];
+	// double ycoord[4];
+	int u_pos[8];
+	int phi_pos[24];
+	vector<double> gradval;
+	double u_val[8];
+	double phi_val[24];
+	int elenodes[4];
+	int numpar;
+	int GQorder = 10;
+	double errval=0;
+	double ScaleFac = 1e3;
 
 	if (grad == nullptr){
 		free(grad2);
@@ -175,9 +188,9 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	for (int i=0; i<(8*numnodes+lenpos); i++){
 		grad[i] = 0;
 	}
-
+	//cout<<"numele"<<numelem<<endl;
 	for (int e=0; e<numelem; e++){
-		cout<<"Check Obj 1"<<endl;
+		// cout<<"Check Obj 1"<<endl;
 		vector<double> matparv;
 		elenodes[0] = ele[e].node1-1;
 		elenodes[1] = ele[e].node2-1;
@@ -192,7 +205,7 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 		ycoord[2] = nodes[elenodes[2]].y_cord;
 		ycoord[3] = nodes[elenodes[3]].y_cord;
 		numpar = ele[e].nummatpar;
-		cout<<"Check Obj 2"<<endl;
+		// cout<<"Check Obj 2"<<endl;
 
 		for(int i=0;i<numpar;i++){
 			matparv.push_back(ele[e].matpar[i]);
@@ -212,7 +225,7 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 
 		ErrAGrad = ErrGQ(u_val,phi_val,xcoord,ycoord,ele[e].mattype,matparv,dispscalefac,GQorder);
 		gradval = ErrAGrad.grdval;
-		cout<<"Check Obj 3"<<endl;
+		// cout<<"Check Obj 3"<<endl;
 		
 		for (int i = 0; i < 8; i++) {
 			grad[u_pos[i]] = grad[u_pos[i]] + gradval[i]*ScaleFac;
@@ -225,7 +238,7 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	}
 	errval = errval*ScaleFac;
 	cout<<errval<<endl;
-
+	
 	double e1 = omp_get_wtime();
 	obj_exec_time += e1 - s1;
 
