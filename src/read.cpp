@@ -21,7 +21,7 @@ void Read::node_reader(vector<Oceane::Nodeptr>& x, string name)
 	while (infile_node_cord >>i >>ix >>iy) {
 		node n;
 		n.id = i;
-		std::cout<<n.id<<" ";
+		std::cout<<n.id<<" "<<endl;
 		n.x_cord = ix;
 		n.y_cord = iy;
 		nodes.push_back(n);

@@ -23,12 +23,11 @@ void Constructor::assembleAmat() {
 	row = 7*bndsdes + count_dc;
 
 	cout << "column " << colm << " rows " << row << endl;
-	vector<double> Fvector(row, 0.0);
 
 	vector<double> temp_Amatrow(colm);
 	for (int i = 0; i < row; i++) {
 		Amat.push_back(temp_Amatrow);
-		// Fvector.push_back(0);
+		Fvector.push_back(0);
 		for (int j = 0; j < colm; j++)
 			Amat[i][j] = 0;
 	}
