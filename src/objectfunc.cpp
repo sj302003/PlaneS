@@ -57,6 +57,7 @@ Errret ErrGQ(double *uval, double *phival, double *xcord, double *ycord, int mat
 	double objint = 0;
 	double detJ=0;
 	Errret ErrAGradval;
+	cout<<"Check ErrGQ"<<endl;
 	for (int k=0;k<32;k++){
 		Ivals.push_back(0);
 	}
@@ -134,6 +135,8 @@ void myconstraint(unsigned m, double *result, unsigned n, const double *x, doubl
 	vector<vector<double>> Amatrix = d->Amat;
 	vector<double> frcvec = d->Fvec;
 	double ScaleFac = 1;
+	std::cout << "Size of result: " << m << std::endl;
+  std::cout << "Size of frcvec: " << frcvec.size() << std::endl;
 	if (grad == nullptr){
 		free(grad1);
 		grad1 = (double*) malloc(Amatrix.size() * Amatrix[0].size() * sizeof(double));
@@ -143,13 +146,17 @@ void myconstraint(unsigned m, double *result, unsigned n, const double *x, doubl
 	}
 
 	for (int i = 0; i < Amatrix.size(); i++) {
+		cout<<"Check myconstraint 3.1"<<endl;
 		result[i] = -frcvec[i];
+		cout<<"Check myconstraint 3"<<endl;
 		for (int j = 0; j < n; j++) {
 			result[i] = result[i] + Amatrix[i][j]*x[j];
 			grad[i*n+j] = Amatrix[i][j];
 		}
+		cout<<"Check myconstraint 4"<<endl;
 		result[i] = result[i]*ScaleFac;
 	}
+	cout<<"Check myconstraint 5"<<endl;
 
 	return;
 }
@@ -166,6 +173,23 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	int numelem = d->numele;
 	int lenpos = d->lnpos;
 	double dispscalefac = d->dispscalefac;
+
+	// Print Amat
+    // cout << "Amat:" << endl;
+    // for (const auto& row : Amat) {
+    //     for (const auto& val : row) {
+    //         cout << val << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    // Print Fvec
+    cout << "Fvec:" << endl;
+    for (const auto& val : Fvector) {
+        cout << val << " ";
+    }
+    cout << endl;
+
 	if (grad == nullptr){
 		free(grad2);
 		grad2 = (double*) malloc((8*numnodes+lenpos) * sizeof(double));
@@ -175,8 +199,10 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	for (int i=0; i<(8*numnodes+lenpos); i++){
 		grad[i] = 0;
 	}
+	// cout<<"Before loop"<<endl;
 
 	for (int e=0; e<numelem; e++){
+		cout<<"Check Obj 1"<<endl;
 		vector<double> matparv;
 		elenodes[0] = ele[e].node1-1;
 		elenodes[1] = ele[e].node2-1;
@@ -191,6 +217,7 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 		ycoord[2] = nodes[elenodes[2]].y_cord;
 		ycoord[3] = nodes[elenodes[3]].y_cord;
 		numpar = ele[e].nummatpar;
+		cout<<"Check Obj 2"<<endl;
 
 		for(int i=0;i<numpar;i++){
 			matparv.push_back(ele[e].matpar[i]);
@@ -210,6 +237,7 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 
 		ErrAGrad = ErrGQ(u_val,phi_val,xcoord,ycoord,ele[e].mattype,matparv,dispscalefac,GQorder);
 		gradval = ErrAGrad.grdval;
+		cout<<"Check Obj 3"<<endl;
 		
 		for (int i = 0; i < 8; i++) {
 			grad[u_pos[i]] = grad[u_pos[i]] + gradval[i]*ScaleFac;
@@ -222,9 +250,11 @@ double myfunc(unsigned n, const double *x, double *grad, void *f_data)
 	}
 	errval = errval*ScaleFac;
 	cout<<errval<<endl;
+	cout<<"Check Obj 4"<<endl;
 
 	double e1 = omp_get_wtime();
 	obj_exec_time += e1 - s1;
+	cout<<"Check Obj 5"<<endl;
 
 	return errval;
 }

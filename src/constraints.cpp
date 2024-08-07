@@ -141,7 +141,7 @@ const double EPS = 1E-13;
 // 	double dispvec[4];
 // }bc;
 
-int bndsdes;
+int bndsdes = 0 ;
 
 // struct element {
 // 	int node1, node2, node3, node4, ele, mattype, nummatpar;

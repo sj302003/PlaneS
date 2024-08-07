@@ -70,7 +70,7 @@ void Read::boundary_condition_reader(vector<Oceane::Nodeptr>& x, string name)
         return;
     }
     
-    int bndsdes = 0;
+    // int bndsdes = 0;
 	while (!infile_boundry_con.eof()) {
 		bc temp;
 		double dispvecval[4];
