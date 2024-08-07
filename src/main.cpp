@@ -18,6 +18,5 @@ int main()
     Display display;
     display.startdisplay();
 
-
     return 0;
 }

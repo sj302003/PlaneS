@@ -18,8 +18,6 @@ void Solve::Solver()
 		d.insert(d.end(), vec.begin(), vec.end());
 	}
 
-	// nlopt::opt opt(nlopt::LD_SLSQP, d.size());
-
 	Amat_rows = Amat.size();
 	Amat_cols = Amat[0].size();
 

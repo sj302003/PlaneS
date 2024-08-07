@@ -1,14 +1,14 @@
 #include "../include/element.h"
 
 #include <algorithm>
-namespace Oceane {
+namespace Oceane
+{
 
     // Element::Element(Index id,std::vector<Nodeptr> nodes):m_id(id),m_nodes(nodes),
     //     m_edges{},m_isBoundary(false),m_init(false) {}
 
     Element::~Element()
     {
-
     }
 
     // void Element::getBmats_at(double x, double y, Oceane::Matrix &bsmat, Oceane::Matrix &bdmat, double &detJ)
@@ -17,13 +17,14 @@ namespace Oceane {
     //     // this->getBsmat_at(x,y,bsmat,detJ);
     // }
 
-    void Element::addNode(Nodeptr node) {
+    void Element::addNode(Nodeptr node)
+    {
         m_nodes.push_back(node);
     }
 
     std::vector<Nodeptr> Element::getNodes()
     {
-        return  m_nodes;
+        return m_nodes;
     }
 
     Index Element::getIndex()
@@ -34,24 +35,28 @@ namespace Oceane {
     void Element::printNodes()
     {
         std::cout << "NODES\n";
-        for (auto& node : m_nodes)
+        for (auto &node : m_nodes)
         {
             node->printNode();
         }
     }
 
-    Edgeptr Element::getEdge(Index i) {
-        auto fun = [this](Index i) {
-            for (auto& iter : this->m_edges) {
+    Edgeptr Element::getEdge(Index i)
+    {
+        auto fun = [this](Index i)
+        {
+            for (auto &iter : this->m_edges)
+            {
                 if (iter->getIndex() == i)
                     return true;
             }
             return false;
-            };
+        };
         assert(fun(i) == true);
-        for (auto& edge : m_edges) {
+        for (auto &edge : m_edges)
+        {
             if (edge->getIndex() == i)
-                return  edge;
+                return edge;
         }
         return NULL;
     }
@@ -59,8 +64,10 @@ namespace Oceane {
     Index Element::elements_shared_by_face(Index i) const
     {
         std::vector<Nodeptr> face = getEdgeNodes(i);
-        std::vector<Index> v1 = face.at(0)->getSharedElementsIndex(); std::sort(v1.begin(), v1.end());
-        std::vector<Index> v2 = face.at(1)->getSharedElementsIndex(); std::sort(v2.begin(), v2.end());
+        std::vector<Index> v1 = face.at(0)->getSharedElementsIndex();
+        std::sort(v1.begin(), v1.end());
+        std::vector<Index> v2 = face.at(1)->getSharedElementsIndex();
+        std::sort(v2.begin(), v2.end());
         std::vector<Index> intersection;
         set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), std::inserter(intersection, intersection.begin()));
         return intersection.size();
@@ -68,7 +75,7 @@ namespace Oceane {
 
     std::vector<Nodeptr> Element::getEdgeNodes(Index i) const
     {
-        auto  endNode = m_nodes.size();
+        auto endNode = m_nodes.size();
         std::vector<Nodeptr> temp;
         if (i != endNode - 1)
         {
@@ -84,8 +91,8 @@ namespace Oceane {
         return temp;
     }
 
-
-    bool Element::isBoundary() {
+    bool Element::isBoundary()
+    {
 
         if (m_init == false)
         {
@@ -115,35 +122,28 @@ namespace Oceane {
                 m_edges.push_back(edge);
             }
         }
-
     }
 
-    std::vector<Index> Element::get_StressDof_indices() {
+    std::vector<Index> Element::get_StressDof_indices()
+    {
         std::vector<Index> stsdof;
-        for (auto& iter : m_nodes) {
+        for (auto &iter : m_nodes)
+        {
             auto nodedof = iter->get_StressDof_Indices();
             stsdof.insert(stsdof.end(), nodedof.begin(), nodedof.end());
         }
         return stsdof;
     }
 
-    std::vector<Index> Element::get_displacementDof_indices() {
+    std::vector<Index> Element::get_displacementDof_indices()
+    {
         std::vector<Index> dispdof;
-        for (auto& iter : m_nodes) {
+        for (auto &iter : m_nodes)
+        {
             auto nodedof = iter->get_DisplacementDof_Indices();
             dispdof.insert(dispdof.end(), nodedof.begin(), nodedof.end());
         }
         return dispdof;
     }
-
-
-
-
-
-
-
-
-
-
 
 } // namespace Oceane
