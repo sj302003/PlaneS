@@ -15,7 +15,7 @@ extern vector<Oceane::Nodeptr> m_boundaryElements;
 extern vector<vector<double>> m_loads;
 extern vector<vector<double>> m_fixity;
 extern vector<vector<double>> L;
-// extern vector<vector<double>>  A;
+extern vector<vector<double>> A; 
 extern vector<vector<double>> F;
 extern vector<vector<double>> Breq;
 extern vector<vector<double>> BC;
@@ -222,8 +222,6 @@ extern vector<BB> BB_results_k2;
 extern vector<BB> BB_results_k4;
 extern vector<BB> BB_results_k3;
 extern vector<BB> BB_results_k1;
-
-extern vector<vector<double>> A; 
 
 extern vector<double> knwndisp;
 

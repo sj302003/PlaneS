@@ -5,8 +5,13 @@
 #include <cmath>
 #include <omp.h>
 
+using namespace std;
+
 Cnstrelret LinElast(double *stress, double *strain, vector<double> matpar) {
-	
+	vector<vector<double>> Cmat;
+	vector<vector<double>> Emat;
+	vector<double> delvalue;
+	vector<double> tempmat(3);
 	for (int i = 0; i < 3; i++) {
 		delvalue.push_back(0);
 		Cmat.push_back(tempmat);
@@ -78,8 +83,7 @@ Errret ErrGQ(double *uval, double *phival, double *xcord, double *ycord, int mat
 			}
 			switch (mattype){
 				case 1: Cnstreldat = LinElast(sts,strn,mtpar);
-					break;
-					
+					break;	
 			}
 			delvalue = Cnstreldat.delval;
 			dfdstrn = Cnstreldat.dfdstrain;
